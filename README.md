@@ -35,11 +35,17 @@ Editado Por Mi
 | --- | --- | --- |--- |
 | WhatsApp | Canal | Español | [¡Únete aquí!](https://whatsapp.com/channel/0029VauTE8AHltY1muYir31n) |
 | WhatsApp | Team | Español | [¡Únete aquí!](https://whatsapp.com/channel/0029Vafxnat8qIzxOjUrwP41) |
-| WhatsApp | Grupo | Español | [¡Únete aquí!](https://chat.whatsapp.com/FCS6htvAmlT7nq006lxU4I) |
+| WhatsApp | Grupo | Español | [¡Únete aquí!](https://chat.whatsapp.com/If3WAOMJqZp2WLqDp9n4Cw) |
 
 
 ## Creador
 <a href="https://github.com/CrxstianEscobar">
   <img src="https://files.catbox.moe/0110im.png" width="100px"/>
 </a>
->>>>>>> f7b73c09 (Subiendo mi bot Megu)
+Crixs 
+
+## Editado por 
+<a
+href="https://github.com/Ado926">
+</a>
+Wirk
