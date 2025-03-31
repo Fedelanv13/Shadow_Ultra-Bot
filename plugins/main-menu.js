@@ -18,7 +18,7 @@ let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, com
     let totalreg = Object.keys(global.db.data.users).length
     let rtotalreg = Object.values(global.db.data.users).filter(user => user.registered == true).length
 
-        await m.react('🍁')
+        await m.react('💙')
         let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
         let perfil = await conn.profilePictureUrl(who, 'image').catch(_ => 'https://files.catbox.moe/pk3xxk.jpg')
 
@@ -185,6 +185,7 @@ ${readMore}
 ര ׄ 🌵˚ .tagnum *prefix*
 ര ׄ 🌵˚ .link
 ര ׄ 🌵˚ .fantasmas
+ര ׄ 🌵˚ .enlinea
 
 𓂂𓏸  𐅹੭੭   *\`ᥱ𝖿ᥱᥴ𝗍᥆s\`*   🪻ᩚ꤬ᰨᰍ
 ര ׄ 🪻˚ .bass *vid*
