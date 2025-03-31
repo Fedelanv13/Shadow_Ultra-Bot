@@ -47,7 +47,17 @@ let handler = async function (m, { conn, text, args, usedPrefix, command }) {
     regMessage += `🎫 *5 Tickets* \n\n`
     regMessage += `👉 *¡Ahora puedes usar todos los comandos disponibles!*\n\n`
     regMessage += `Para tu perfil personal, usa el comando *\`${usedPrefix}profile\`*\n\n`
-    regMessage += `🔗 *Verifica tu registro aquí:* [Canal de Registro](https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f)`
+    regMessage += `🔗 *Verifica tu registro aquí:* _Canal de Registro:_ (https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f)`
+
+    // Notificación al canal
+    const canalID = '120363402846939411@newsletter';  // ID de tu canal de WhatsApp
+    let notificationMessage = `¡Nuevo registro! 🎉\n\n`
+    notificationMessage += `🆔 *Usuario:* ${name}\n`
+    notificationMessage += `🔹 *Edad:* ${age} años\n`
+    notificationMessage += `📅 *Fecha de Registro:* ${moment().format('YYYY-MM-DD HH:mm:ss')}\n\n`
+    notificationMessage += `¡Bienvenido(a) a la comunidad! 🎉`
+
+    await conn.sendMessage(canalID, { text: notificationMessage });
 
     await m.react('✅')
     await conn.sendMessage(m.chat, {
