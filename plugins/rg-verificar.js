@@ -50,7 +50,7 @@ let handler = async function (m, { conn, text, args, usedPrefix, command }) {
     regbot += `💎 15 Diamantes\n> `
     regbot += `💫 245 Exp\n> `
     regbot += `🎫 12 Tokens\n\n`
-    regbot += `> ᥴ᥆ᥣ᥆ᥴᥲ *.profile* ⍴ᥲrᥲ ᥎ᥱr 𝗍ᥙ ⍴ᥱr𝖿іᥣ.\n> ᥎ᥱrі𝖿іᥴᥲ 𝗍ᥙ rᥱgіs𝗍r᥆ ᥲ𝗊ᥙі 👇🏻`
+    regbot += `> ᥴ᥆ᥣ᥆ᥴᥲ *.profile* ⍴ᥲrᥲ ᥎ᥱr 𝗍ᥙ ⍴ᥱr𝖿іᥣ.\n> ᥎ᥱrі𝖿іᥴᥲ 𝗍ᥙ rᥱgіs𝗍r᥆ ᥲ𝗊ᥙі 👇🏻\n https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f`
 
     await m.react('💌')
     await conn.sendMessage(m.chat, {
