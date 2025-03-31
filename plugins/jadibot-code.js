@@ -179,7 +179,7 @@ handler.help = ['code'];
 handler.tags = ['serbot'];
 handler.command = ['code', 'Code', 'serbot code'];
 handler.rowner = false 
-handler.register = true 
+handler.register = false 
 
 export default handler;
 
