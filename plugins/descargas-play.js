@@ -5,21 +5,29 @@ import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysoc
 const handler = async (m, { conn, args, usedPrefix }) => {
     if (!args[0]) return conn.reply(m.chat, '*[ ℹ️ ] Ingresa un título de Youtube.*\n\n*[ 💡 ] Ejemplo:* Corazón Serrano - Mix Poco Yo', m);
 
-    await m.react('🕓');
+    await m.react('🔍');
     try {
-        let searchResults = await searchVideos(args.join(" "));
+        const searchResults = await searchVideos(args.join(" "));
+        
+        if (searchResults.length === 0) throw new Error('No se encontraron resultados.');
 
-        if (!searchResults.length) throw new Error('No se encontraron resultados.');
+        const video = searchResults[0];
+        const thumbnail = await (await fetch(video.miniatura)).buffer();
 
-        let video = searchResults[0];
-        let thumbnail = await (await fetch(video.miniatura)).buffer();
+        const messageText = formatMessage(video);
 
-        let messageText = `\`DESCARGAS - PLAY\`\n\n`;
-        messageText += `${video.titulo}\n\n`;
-        messageText += `*⌛ Duración:* ${video.duracion || 'No disponible'}\n`;
-        messageText += `*👤 Autor:* ${video.canal || 'Desconocido'}\n`;
-        messageText += `*📆 Publicado:* ${convertTimeToSpanish(video.publicado)}\n`;
-        messageText += `*🖇️ Url:* ${video.url}\n`;
+        const buttons = [
+            {
+                buttonId: `${usedPrefix}ytmp3 ${video.url}`,
+                buttonText: { displayText: '🎶 Audio' },
+                type: 1
+            },
+            {
+                buttonId: `${usedPrefix}video ${video.url}`,
+                buttonText: { displayText: '🎥 Vídeo' },
+                type: 1
+            }
+        ];
 
         await conn.sendMessage(m.chat, {
             image: thumbnail,
@@ -30,19 +38,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
                 forwardingScore: 0,
                 isForwarded: true
             },
-            buttons: [
-                {
-                    buttonId: `${usedPrefix}ytmp3 ${video.url}`,
-                    buttonText: { displayText: 'Audio' },
-                    type: 1,
-                },
-                {
-   
-                    buttonId: `${usedPrefix}video ${video.url}`,
-                    buttonText: { displayText: 'Vídeo' },
-                    type: 1,
-                }
-            ],
+            buttons,
             headerType: 1,
             viewOnce: true
         }, { quoted: m });
@@ -50,21 +46,23 @@ const handler = async (m, { conn, args, usedPrefix }) => {
         await m.react('✅');
     } catch (e) {
         console.error(e);
-        await m.react('✖️');
+        await m.react('❌');
         conn.reply(m.chat, '*`Error al buscar el video.`*', m);
     }
 };
 
-handler.help = ['play']
-handler.tags = ['descargas']
-handler.command = ['play', 'lay']
+handler.help = ['play'];
+handler.tags = ['descargas'];
+handler.command = ['play', 'lay'];
 handler.customPrefix = /p|@|./i;
+
 handler.before = async (m, { conn }) => {
-    let text = m.text?.toLowerCase()?.trim();
-    if (text === 'play' || text === 'hd') {
+    const text = m.text?.toLowerCase()?.trim();
+    if (['play', 'hd'].includes(text)) {
         return handler(m, { conn });
     }
-}
+};
+
 export default handler;
 
 async function searchVideos(query) {
@@ -83,6 +81,16 @@ async function searchVideos(query) {
         console.error('Error en yt-search:', error.message);
         return [];
     }
+}
+
+function formatMessage(video) {
+    let message = `🔹 *DESCARGAS - PLAY* 🔹\n\n`;
+    message += `${video.titulo}\n\n`;
+    message += `*⌛ Duración:* ${video.duracion || 'No disponible'}\n`;
+    message += `*👤 Autor:* ${video.canal || 'Desconocido'}\n`;
+    message += `*📆 Publicado:* ${convertTimeToSpanish(video.publicado)}\n`;
+    message += `*🖇️ Url:* ${video.url}\n`;
+    return message;
 }
 
 function convertTimeToSpanish(timeText) {
