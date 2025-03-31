@@ -69,6 +69,5 @@ let handler = async function (m, { conn, text, args, usedPrefix, command }) {
 handler.help = ['register']
 handler.tags = ['user']
 handler.command = ['reg', 'register']
-handler.customPrefix = /register/i;
 
 export default handler;
