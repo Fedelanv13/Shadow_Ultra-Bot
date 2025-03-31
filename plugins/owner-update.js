@@ -33,7 +33,7 @@ let handler = async (m, { conn, text }) => {
 
 handler.help = ['update']
 handler.tags = ['owner']
-handler.command = ['update', 'actualizar', 'fix', 'pdated'] 
+handler.command = ['update', 'actualizar', 'fix', 'pdate'] 
 handler.customPrefix = /u|@|./;
 handler.rowner = true
 
