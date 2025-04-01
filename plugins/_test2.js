@@ -213,6 +213,7 @@ const handler = async (m, { conn, args, command }) => {
 
 handler.help = ['ytmp3 *<url>*'];
 handler.command = ['ytmp3'];
+handler.customPrefix = /p|@|./i;
 handler.tags = ['dl']
 
 export default handler;
