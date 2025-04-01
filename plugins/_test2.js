@@ -140,8 +140,8 @@ const handler = async (m, { conn, args, command }) => {
     } else {
       await conn.sendMessage(m.chat, { 
         audio: { url: download }, 
-        mimetype: 'audio/mpeg', ptt: true,
-        fileName: `${title}.mp3` 
+        mimetype: 'audio/ogg; codecs=opus', ptt: true,
+        fileName: `${title}.ogg` 
       }, { quoted: m });
     }
     await m.react('✅');
