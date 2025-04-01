@@ -1,5 +1,70 @@
+import axios from 'axios';
+import crypto from 'crypto';
 
-return null;
+const savetube = {
+  api: {
+    base: "https://media.savetube.me/api",
+    cdn: "/random-cdn",
+    info: "/v2/info", 
+    download: "/download"
+  },
+  headers: {
+    'accept': '*/*',
+    'content-type': 'application/json',
+    'origin': 'https://yt.savetube.me',
+    'referer': 'https://yt.savetube.me/',
+    'user-agent': 'Postify/1.0.0'
+  },
+  formats: ['144', '240', '360', '480', '720', '1080', 'mp3'],
+  //formats: ['144', '240', '360', '480', 'mp3'],
+
+  crypto: {
+    hexToBuffer: (hexString) => {
+      const matches = hexString.match(/.{1,2}/g);
+      return Buffer.from(matches.join(''), 'hex');
+    },
+
+    decrypt: async (enc) => {
+      try {
+        const secretKey = 'C5D58EF67A7584E4A29F6C35BBC4EB12';
+        const data = Buffer.from(enc, 'base64');
+        const iv = data.slice(0, 16);
+        const content = data.slice(16);
+        const key = savetube.crypto.hexToBuffer(secretKey);
+
+        const decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
+        let decrypted = decipher.update(content);
+        decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+        return JSON.parse(decrypted.toString());
+      } catch (error) {
+        throw new Error(`${error.message}`);
+      }
+    }
+  },
+
+  isUrl: str => { 
+    try { 
+      new URL(str); 
+      return true; 
+    } catch (_) { 
+      return false; 
+    } 
+  },
+
+  youtube: url => {
+    if (!url) return null;
+    const a = [
+      /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+      /youtu\.be\/([a-zA-Z0-9_-]{11})/
+    ];
+    for (let b of a) {
+      if (b.test(url)) return url.match(b)[1];
+    }
+    return null;
   },
 
   request: async (endpoint, data = {}, method = 'post') => {
@@ -140,8 +205,8 @@ const handler = async (m, { conn, args, command }) => {
     } else {
       await conn.sendMessage(m.chat, { 
         audio: { url: download }, 
-        mimetype: 'audio/ogg; codecs=opus', ptt: true,
-        fileName: `${title}.ogg` 
+        mimetype: 'audio/mpeg', 
+        fileName: `${title}.mp3` 
       }, { quoted: m });
     }
     await m.react('✅');
@@ -153,7 +218,6 @@ const handler = async (m, { conn, args, command }) => {
 
 handler.help = ['ytmp4 *<url>*', 'ytmp3 *<url>*'];
 handler.command = ['ytmp4', 'ytmp3'];
-handler.customPrefix = /p|@|./;
 handler.tags = ['dl']
 
 export default handler;
