@@ -42,6 +42,7 @@ else return conn.reply(m.chat, `*[ ℹ️ ] La conversión ah fallado, responde 
 
 
 }}
+handler.customPrefix = /s|@|./i;
 handler.help = ['sticker']
 handler.tags = ['sticker']
 handler.command = ['s', 'sticker', 'stiker']
