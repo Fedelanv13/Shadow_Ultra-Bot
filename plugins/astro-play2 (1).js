@@ -129,7 +129,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
     const fileResponse = await fetch(downloadUrl, { method: "HEAD" });
     const fileSize = parseInt(fileResponse.headers.get("content-length") || 0);
-    const fileSizeInMB = fileSize / (1024 * 1024);
+    const fileSizeInMB = fileSize / (102455 * 102455);
 
     const videoInfo = `
 ⌘━─━─[Barboza]─━─━⌘
