@@ -132,8 +132,10 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     const fileSizeInMB = fileSize / (1024 * 1024);
 
     const videoInfo = `
-⌘━─━─[Barboza]─━─━⌘
+_DESCARGAS - PLAY2_
 
+  *💙 Shadow Ultra 💙*
+  
 ➷ *Título⤿:* ${apiTitle}
 ➷ *Subido⤿:* ${ago}
 ➷ *Duración⤿:* ${timestamp}
@@ -142,7 +144,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
 ➤ *Su Resultado Se Está Enviando Por Favor Espere....* 
 
-> _${officialBrand}_
+> _👻_
     `;
 
     await conn.sendMessage(m.chat, { image: { url: apiImage }, caption: videoInfo });
