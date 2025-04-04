@@ -1,220 +1,35 @@
-import axios from 'axios';
-import crypto from 'crypto';
+import fs from 'fs'
+import acrcloud from 'acrcloud'
+let acr = new acrcloud({
+host: 'identify-eu-west-1.acrcloud.com',
+access_key: 'c33c767d683f78bd17d4bd4991955d81',
+access_secret: 'bvgaIAEtADBTbLwiPGYlxupWqkNGIjT7J9Ag2vIu'
+})
 
-const savetube = {
-  api: {
-    base: "https://media.savetube.me/api",
-    cdn: "/random-cdn",
-    info: "/v2/info",
-    download: "/download"
-  },
-  headers: {
-    'accept': '*/*',
-    'content-type': 'application/json',
-    'origin': 'https://yt.savetube.me',
-    'referer': 'https://yt.savetube.me/',
-    'user-agent': 'Postify/1.0.0'
-  },
-  formats: ['mp3'],
+let handler = async (m) => {
+let q = m.quoted ? m.quoted : m
+let mime = (q.msg || q).mimetype || ''
+if (/audio|video/.test(mime)) { if ((q.msg || q).seconds > 20) return m.reply('╰⊱⚠️⊱ *𝘼𝘿𝙑𝙀𝙍𝙏𝙀𝙉𝘾𝙄𝘼 | 𝙒𝘼𝙍𝙉𝙄𝙉𝙂* ⊱⚠️⊱╮\n\nEl archivo que carga es demasiado grande, le sugerimos que corte el archivo grande a un archivo más pequeño, 10-20 segundos Los datos de audio son suficientes para identificar')
+await conn.reply(m.chat, wait, m)
+let media = await q.download()
+let ext = mime.split('/')[1]
+fs.writeFileSync(`./tmp/${m.sender}.${ext}`, media)
+let res = await acr.identify(fs.readFileSync(`./tmp/${m.sender}.${ext}`))
+let { code, msg } = res.status
+if (code !== 0) throw msg
+let { title, artists, album, genres, release_date } = res.metadata.music[0]
+let txt = `
+𝙍𝙀𝙎𝙐𝙇𝙏𝘼𝘿𝙊 𝘿𝙀 𝙇𝘼 𝘽𝙐𝙎𝙌𝙐𝙀𝘿𝘼𝙎 
 
-  crypto: {
-    hexToBuffer: (hexString) => {
-      const matches = hexString.match(/.{1,2}/g);
-      return Buffer.from(matches.join(''), 'hex');
-    },
-
-    decrypt: async (enc) => {
-      try {
-        const secretKey = 'C5D58EF67A7584E4A29F6C35BBC4EB12';
-        const data = Buffer.from(enc, 'base64');
-        const iv = data.slice(0, 16);
-        const content = data.slice(16);
-        const key = savetube.crypto.hexToBuffer(secretKey);
-
-        const decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
-        let decrypted = decipher.update(content);
-        decrypted = Buffer.concat([decrypted, decipher.final()]);
-
-        return JSON.parse(decrypted.toString());
-      } catch (error) {
-        throw new Error(`${error.message}`);
-      }
-    }
-  },
-
-  isUrl: str => {
-    try {
-      new URL(str);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  },
-
-  youtube: url => {
-    if (!url) return null;
-    const a = [
-      /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
-      /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-      /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
-      /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
-      /youtu\.be\/([a-zA-Z0-9_-]{11})/
-    ];
-    for (let b of a) {
-      if (b.test(url)) return url.match(b)[1];
-    }
-    return null;
-  },
-
-  request: async (endpoint, data = {}, method = 'post') => {
-    try {
-      const { data: response } = await axios({
-        method,
-        url: `${endpoint.startsWith('http') ? '' : savetube.api.base}${endpoint}`,
-        data: method === 'post' ? data : undefined,
-        params: method === 'get' ? data : undefined,
-        headers: savetube.headers
-      });
-      return {
-        status: true,
-        code: 200,
-        data: response
-      };
-    } catch (error) {
-      return {
-        status: false,
-        code: error.response?.status || 500,
-        error: error.message
-      };
-    }
-  },
-
-  getCDN: async () => {
-    const response = await savetube.request(savetube.api.cdn, {}, 'get');
-    if (!response.status) return response;
-    return {
-      status: true,
-      code: 200,
-      data: response.data.cdn
-    };
-  },
-
-  download: async (link) => {
-    if (!link) {
-      return {
-        status: false,
-        code: 400,
-        error: "¿Dónde está el link? No puedes descargar sin un link 🗿"
-      };
-    }
-
-    if (!savetube.isUrl(link)) {
-      return {
-        status: false,
-        code: 400,
-        error: "¡Pon un link de YouTube válido, por favor! 🗿"
-      };
-    }
-
-    const format = 'mp3';
-    if (!savetube.formats.includes(format)) {
-      return {
-        status: false,
-        code: 400,
-        error: "Formato no disponible (solo se admite mp3 en esta versión) 🗿",
-        available_fmt: savetube.formats
-      };
-    }
-
-    const id = savetube.youtube(link);
-    if (!id) {
-      return {
-        status: false,
-        code: 400,
-        error: "No se puede extraer el link de YouTube, verifica el link y prueba de nuevo 😂"
-      };
-    }
-
-    try {
-      const cdnx = await savetube.getCDN();
-      if (!cdnx.status) return cdnx;
-      const cdn = cdnx.data;
-
-      const result = await savetube.request(`https://${cdn}${savetube.api.info}`, {
-        url: `https://www.youtube.com/watch?v=${id}`
-      });
-      if (!result.status) return result;
-      const decrypted = await savetube.crypto.decrypt(result.data.data);
-
-      const dl = await savetube.request(`https://${cdn}${savetube.api.download}`, {
-        id: id,
-        downloadType: 'audio',
-        quality: '128',
-        key: decrypted.key
-      });
-
-      return {
-        status: true,
-        code: 200,
-        result: {
-          title: decrypted.title || "Desconocido 🤷🏻",
-          type: 'audio',
-          format: 'mp3',
-          thumbnail: decrypted.thumbnail || `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
-          download: dl.data.data.downloadUrl,
-          id: id,
-          key: decrypted.key,
-          duration: decrypted.duration,
-          quality: '128',
-          downloaded: dl.data.data.downloaded || false
-        }
-      };
-
-    } catch (error) {
-      return {
-        status: false,
-        code: 500,
-        error: error.message
-      };
-    }
-  }
-};
-
-const handler = async (m, { conn, args, command }) => {
-  if (command !== 'ytmp3') return;
-  if (args.length < 1) return m.reply(`*[ ℹ️ ] Ingresa una URL de un audio de YouTube*`);
-
-  let url = args[0];
-
-  if (!savetube.isUrl(url)) return m.reply("Por favor, ingresa un link válido de YouTube.");
-
-  try {
-    await m.react('🎧'); // Cambié el emoji a uno de audio
-    let res = await savetube.download(url);
-    if (!res.status) {
-      await m.react('✖️');
-      return m.reply(`*Error:* ${res.error}`);
-    }
-
-    let { title, download } = res.result;
-
-    await conn.sendMessage(m.chat, {
-      audio: { url: download },
-      mimetype: 'audio/mpeg',
-      fileName: `${title}.mp3`
-    }, { quoted: m });
-
-    await m.react('✅');
-  } catch (e) {
-    await m.react('✖️');
-    m.reply(`*¡Fallo en la descarga!*`);
-  }
-};
-
-handler.help = ['ytmp3 *<url>*'];
-handler.command = ['ytmp3'];
-handler.customPrefix = /p|@|./i;
-handler.tags = ['dl']
-
-export default handler;
-      
+• 📌 𝙏𝙄𝙏𝙐𝙇𝙊: ${title}
+• 👨‍🎤 𝘼𝙍𝙏𝙄𝙎𝙏𝘼: ${artists !== undefined ? artists.map(v => v.name).join(', ') : 'No encontrado'}
+• 💾 𝘼𝙇𝘽𝙐𝙈: ${album.name || 'No encontrado'}
+• 🌐 𝙂𝙀𝙉𝙀𝙍𝙊: ${genres !== undefined ? genres.map(v => v.name).join(', ') : 'No encontrado'}
+• 📆 𝙁𝙀𝘾𝙃𝘼 𝘿𝙀 𝙇𝘼𝙉𝙕𝘼𝙈𝙄𝙀𝙉𝙏𝙊: ${release_date || 'No encontrado'}
+`.trim()
+fs.unlinkSync(`./tmp/${m.sender}.${ext}`)
+m.reply(txt)
+} else throw '╰⊱❗️⊱ *𝙇𝙊 𝙐𝙎𝙊́ 𝙈𝘼𝙇 | 𝙐𝙎𝙀𝘿 𝙄𝙏 𝙒𝙍𝙊𝙉𝙂* ⊱❗️⊱╮\n\n𝙍𝙀𝙎𝙋𝙊𝙉𝘿𝘼 𝘼 𝙐𝙉 𝘼𝙐𝘿𝙄𝙊 𝙊 𝙑𝙄𝘿𝙀𝙊'
+}
+handler.command = /^(quemusica2|quemusicaes2|whatmusic2)$/i
+export default handler
