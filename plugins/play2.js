@@ -1,7 +1,13 @@
 import fetch from "node-fetch";
 import yts from 'yt-search';
+import axios from "axios";
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
+  let user = global.db.data.users[m.sender];
+
+  if (user.chocolates < 0) { 
+    return conn.reply(m.chat, 'ꕥ No tienes suficientes *Chocolates 🍫* Necesitas 2 más para usar este comando.', m); 
+  }
 
   try {
     if (!text.trim()) {
@@ -44,7 +50,19 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
       },
     };
 
-    if (command === 'play2' || command === 'mp4' || command === 'playvideo') {
+    if (command === 'play' || command === 'mp3' || command === 'playaudio') {
+      try {
+        const api = await (await fetch(`https://api.vreden.my.id/api/ytmp3?url=${url}`)).json();
+        const result = api.result?.download.url;
+
+        if (!result) throw new Error('El enlace de audio no se generó correctamente.');
+
+        await conn.sendMessage(m.chat, { audio: { url: result }, fileName: `${api.result.title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m });
+      } catch (e) {
+        console.error('Error al enviar el audio:', e.message);
+        return conn.reply(m.chat, '⚠︎ No se pudo enviar el audio. Intenta nuevamente más tarde.', m);
+      }
+    } else if (command === 'play2' || command === 'mp4' || command === 'playvideo') {
       try {
         const response = await fetch(`https://api.vreden.my.id/api/ytmp4?url=${url}`);
         const json = await response.json();
@@ -60,6 +78,9 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     } else {
       return conn.reply(m.chat, '⚠︎ Comando no reconocido.', m);
     }
+
+    user.chocolates -= 0;
+    conn.reply(m.chat, `Ahi tienes 🍫*`, m);
 
   } catch (error) {
     return m.reply(`⚠︎ Ocurrió un error: ${error}`);
