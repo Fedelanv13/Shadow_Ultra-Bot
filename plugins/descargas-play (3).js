@@ -18,7 +18,7 @@ const userRequests = {};
 const handler = async (m, { conn, command, args, text, usedPrefix }) => {
 if (!text) return m.reply(`*🤔 ${await tr("Que está buscando?")} 🤔*\n*${await tr("Ingrese el nombre de la canción")}*\n\n*${await tr("Ejemplo:")}*\n${usedPrefix + command} Vitamina Jombriel`);
 const tipoDescarga = command === 'play' || command === 'musica' ? 'audio' : command === 'play2' ? 'video' : command === 'play3' ? 'audio (documento)' : command === 'play4' ? 'video (documento)' : '';
-if (userRequests[m.sender]) return await conn.reply(m.chat, `👋 ${await tr("Heyy")} @${m.sender.split('@')[0]} ${await tr("Esperate we xd, ya estás descargando algo")} 👆\n${await tr("Solo te envio el pedido, y me solicitas otro si quieres .")}`, userCaptions.get(m.sender) || m);
+if (userRequests[m.sender]) return await conn.reply(m.chat, `⏳ ${await tr("Heyy")} @${m.sender.split('@')[0]} ${await tr("Esperate we xd, ya estás descargando algo")} 👆\n${await tr("Perate aque termine tu solicitud actual antes de hacer otra...")}`, userCaptions.get(m.sender) || m);
 userRequests[m.sender] = true;
 try {
 let videoIdToFind = text.match(youtubeRegexID) || null;
@@ -254,4 +254,5 @@ if (data.status === 'ok') {
   } else {
     throw new Error("No se pudo obtener la descarga desde 9Convert");
   }
-}
+  }
+  
