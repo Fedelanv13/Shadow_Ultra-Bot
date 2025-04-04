@@ -36,16 +36,20 @@ let handler = async (m, { conn, text }) => {
     const video = searchResults.videos[0];
     if (!video) throw new Error("No se encontraron resultados.");
 
-    // Obtener la URL del video
-    const videoUrl = video.url;
-    const videoFile = {
+    // Obtener datos de descarga (debe ser el enlace directo del video)
+    const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
+    const apiData = await fetchWithRetries(apiUrl);
+    const videoUrl = apiData?.download?.url;
+    if (!videoUrl) throw new Error("No se pudo obtener la URL de descarga del video.");
+
+    // Enviar el video
+    const videoMessage = {
       video: { url: videoUrl },
       mimetype: "video/mp4",
       fileName: `${video.title}.mp4`,
     };
 
-    // Enviar el video
-    await conn.sendMessage(m.chat, videoFile, { quoted: m });
+    await conn.sendMessage(m.chat, videoMessage, { quoted: m });
 
     // Reaccionar al mensaje original con ✅
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
