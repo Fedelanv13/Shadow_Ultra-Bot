@@ -5,11 +5,11 @@ import yts from "yt-search"; // Asegúrate de tener instalado yt-search
 const encodedApiUrl = "aHR0cHM6Ly9hcGkuYWdhdHoueHl6L2FwaS95dG1wNA==";
 
 // Marca oficial de MediaHub
-const officialBrand = "👻";
+const officialBrand = "©Prohibido La Copia, Código Oficial De MediaHub™";
 
 // ENVIAR INFORMACIÓN PARA EL ARCHIVO
 const verifyBrand = () => {
-  const brand = "Codigo Beta";
+  const brand = "©Prohibido La Copia, Código Oficial De MediaHub™";
   if (brand !== officialBrand) {
     throw new Error(
       "❌ *ERROR CRÍTICO:* La marca oficial de MediaHub ha sido alterada. Restáurela para continuar usando el código."
@@ -132,9 +132,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     const fileSizeInMB = fileSize / (1024 * 1024);
 
     const videoInfo = `
-DESCARGAS - PLAY2
-
-  * 💙 Shadow*
+⌘━─━─[Barboza]─━─━⌘
 
 ➷ *Título⤿:* ${apiTitle}
 ➷ *Subido⤿:* ${ago}
