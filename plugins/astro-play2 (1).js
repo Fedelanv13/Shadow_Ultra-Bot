@@ -26,12 +26,22 @@ const fetchWithRetries = async (url, maxRetries = 2, timeout = 60000) => {
       const timeoutId = setTimeout(() => controller.abort(), timeout);
 
       const response = await fetch(url, { signal: controller.signal });
-      const data = await response.json();
+      
+      // Verificar si la respuesta es válida JSON
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text); // Intentamos parsear la respuesta como JSON
+      } catch (e) {
+        throw new Error('La respuesta no es un JSON válido.');
+      }
 
       clearTimeout(timeoutId); // Limpiar el timeout si la respuesta es exitosa
 
       if (data && data.status === 200 && data.data && data.data.downloadUrl) {
         return data.data; // Retorna el resultado si es válido
+      } else {
+        throw new Error('La respuesta no contiene la URL de descarga.');
       }
     } catch (error) {
       console.error(`Error en el intento ${attempt + 1}:`, error.message);
