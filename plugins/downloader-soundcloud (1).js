@@ -32,17 +32,19 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }
 
   try {
-    // Reaccionar al mensaje inicial con 🕒
+    // Reacción inicial
     await conn.sendMessage(m.chat, { react: { text: "🕒", key: m.key } });
 
-    // Buscar en YouTube
+    // Buscar video en YouTube
     const searchResults = await yts(text.trim());
     const video = searchResults.videos[0];
     if (!video) throw new Error("No se encontraron resultados.");
 
-    // Obtener datos de descarga
+    // Obtener datos de descarga desde la API
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
+    const audioUrl = apiData?.download?.url;
+    if (!audioUrl) throw new Error("No se pudo obtener el enlace de descarga del audio.");
 
     // Enviar información del video con miniatura y botón
     await conn.sendMessage(m.chat, {
@@ -57,24 +59,22 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       ],
     });
 
-    // Enviar solo el audio
+    // Enviar audio (NO PTT)
     const audioMessage = {
-      audio: { url: apiData.download.url },
-      mimetype: "audio/mpeg",
+      audio: { url: audioUrl },
+      mimetype: 'audio/mp4',
       fileName: `${video.title}.mp3`,
     };
 
     await conn.sendMessage(m.chat, audioMessage, { quoted: m });
 
-    // Reaccionar al mensaje original con ✅
+    // Reacción final
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (error) {
     console.error("Error:", error);
 
-    // Reaccionar al mensaje original con ❌
     await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
-
     await conn.sendMessage(m.chat, {
       text: `❌ *Error al procesar tu solicitud:*\n${error.message || "Error desconocido"}`,
     });
