@@ -28,7 +28,7 @@ let handler = async (m, { conn, text }) => {
   if (!text || !text.trim()) return;
 
   try {
-    // Reaccionar al mensaje inicial con 🕒
+    // Reaccionar al mensaje inicial con 👻
     await conn.sendMessage(m.chat, { react: { text: "👻", key: m.key } });
 
     // Buscar en YouTube
@@ -36,11 +36,17 @@ let handler = async (m, { conn, text }) => {
     const video = searchResults.videos[0];
     if (!video) throw new Error("No se encontraron resultados.");
 
+    // Enviar mensaje de espera con emojis y formato
+    await conn.sendMessage(m.chat, {
+      text: `⌛ *Procesando tu canción...*\n\n\`\`\`🎧 Descargando audio:\n${video.title}\n\nPor favor espera un momento... 🌀\`\`\``,
+      quoted: m
+    });
+
     // Obtener datos de descarga
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
 
-    // Enviar solo el audio sin mensaje adicional
+    // Enviar el audio
     const audioMessage = {
       audio: { url: apiData.download.url },
       mimetype: "audio/mpeg", ptt: true,
@@ -49,18 +55,17 @@ let handler = async (m, { conn, text }) => {
 
     await conn.sendMessage(m.chat, audioMessage, { quoted: m });
 
-    // Reaccionar al mensaje original con ✅
+    // Reaccionar con ✅
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (error) {
     console.error("Error:", error);
 
-    // Reaccionar al mensaje original con ❌
+    // Reaccionar con ❌
     await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
   }
 };
 
-// Cambia el Regex para que reconozca ".play"
 handler.command = ['play', 'mp3', 'playaudio'];
 handler.help = ['play'];
 handler.tags = ['play'];
