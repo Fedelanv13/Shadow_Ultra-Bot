@@ -31,15 +31,14 @@ let handler = async (m, { conn, text }) => {
     // Reaccionar al mensaje inicial con una reacción profesional
     await conn.sendMessage(m.chat, { react: { text: "🔄", key: m.key } });
 
-    // Buscar en YouTube
+    // Buscar en YouTube de forma asincrónica
     const searchResults = await yts(text.trim());
     const video = searchResults.videos[0];
     if (!video) throw new Error("No se encontraron resultados.");
 
-    // Enviar mensaje de espera con el título, la imagen del video y un mensaje profesional
-    await conn.sendMessage(m.chat, {
-      text: `*Solicitud en progreso...* ⏳\n\n*Descargando el audio de:* \n\n\`\`\`🎧 ${video.title}\`\`\`\n\n*Por favor, espera mientras preparamos el archivo.*\n\n_Imagen del video:_`,
-      image: { url: video.thumbnail },
+    // Enviar mensaje de espera con un estilo profesional (rápido)
+    const waitMessage = await conn.sendMessage(m.chat, {
+      text: `*Procesando tu solicitud...* ⏳\n\n*Estamos preparando el archivo de audio para ti.*\n\n*🎧 Canción:* ${video.title}\n\nPor favor, espera mientras descargamos el audio. Este proceso puede tardar solo unos segundos. *Gracias por tu paciencia.*`,
       quoted: m
     });
 
@@ -56,6 +55,9 @@ let handler = async (m, { conn, text }) => {
 
     // Enviar el audio
     await conn.sendMessage(m.chat, audioMessage, { quoted: m });
+
+    // Eliminar el mensaje de espera una vez que el audio ha sido enviado
+    await conn.deleteMessage(m.chat, waitMessage.key);
 
     // Reaccionar con una confirmación profesional
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
