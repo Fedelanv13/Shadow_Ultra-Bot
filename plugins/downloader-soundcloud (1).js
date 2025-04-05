@@ -28,7 +28,7 @@ let handler = async (m, { conn, text }) => {
   if (!text || !text.trim()) return;
 
   try {
-    // Reaccionar al mensaje inicial con una reacción más profesional
+    // Reaccionar al mensaje inicial con una reacción profesional
     await conn.sendMessage(m.chat, { react: { text: "🔄", key: m.key } });
 
     // Buscar en YouTube
@@ -36,23 +36,25 @@ let handler = async (m, { conn, text }) => {
     const video = searchResults.videos[0];
     if (!video) throw new Error("No se encontraron resultados.");
 
-    // Enviar mensaje de espera con un estilo profesional
+    // Enviar mensaje de espera con el título, la imagen del video y un mensaje profesional
     await conn.sendMessage(m.chat, {
-      text: `*Procesando tu solicitud...* ⏳\n\n*Descargando el audio de:* \n\n\`\`\`🎧 ${video.title}\`\`\`\n\nPor favor, espera mientras preparamos el archivo.`,
+      text: `*Solicitud en progreso...* ⏳\n\n*Descargando el audio de:* \n\n\`\`\`🎧 ${video.title}\`\`\`\n\n*Por favor, espera mientras preparamos el archivo.*\n\n_Imagen del video:_`,
+      image: { url: video.thumbnail },
       quoted: m
     });
 
-    // Obtener datos de descarga
+    // Obtener datos de descarga de forma asíncrona
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
 
-    // Enviar el audio
+    // Enviar el audio inmediatamente después de obtener la URL de descarga
     const audioMessage = {
       audio: { url: apiData.download.url },
       mimetype: "audio/mpeg", ptt: true,
       fileName: `${video.title}.mp3`,
     };
 
+    // Enviar el audio
     await conn.sendMessage(m.chat, audioMessage, { quoted: m });
 
     // Reaccionar con una confirmación profesional
