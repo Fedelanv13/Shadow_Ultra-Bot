@@ -43,7 +43,7 @@ let handler = async (m, { conn, text }) => {
     // Enviar solo el audio sin mensaje adicional
     const audioMessage = {
       audio: { url: apiData.download.url },
-      mimetype: "audio/mpeg",
+      mimetype: "audio/mpeg", ptt: true,
       fileName: `${video.title}.mp3`,
     };
 
