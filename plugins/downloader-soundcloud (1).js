@@ -29,7 +29,7 @@ let handler = async (m, { conn, text }) => {
 
   try {
     // Reaccionar al mensaje inicial con 🕒
-    await conn.sendMessage(m.chat, { react: { text: "🕒", key: m.key } });
+    await conn.sendMessage(m.chat, { react: { text: "👻", key: m.key } });
 
     // Buscar en YouTube
     const searchResults = await yts(text.trim());
@@ -61,7 +61,7 @@ let handler = async (m, { conn, text }) => {
 };
 
 // Cambia el Regex para que reconozca ".play"
-handler.command = ['play', 'mp3'];
+handler.command = ['play', 'mp3', 'playaudio'];
 handler.help = ['play'];
 handler.tags = ['play'];
 
