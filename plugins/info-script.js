@@ -1,7 +1,7 @@
-const handler = async (m, { conn, text }) => {
+const handler = async (m, { conn, text, command }) => {
   try {
-    // Verifica si el mensaje contiene la palabra "script"
-    if (text.toLowerCase().includes('script')) {
+    // Verifica si el comando es 'script'
+    if (command === 'script') {
       // Responde con el mensaje profesional y emojis
       const message = `
 ⚡ **Shadow Ultra Edited** ⚡  
@@ -14,8 +14,8 @@ const handler = async (m, { conn, text }) => {
 🚀 **Mejora tu experiencia con Shadow 👻**  
 
 💬 *Para más información, sigue el repositorio original o únete al grupo:*  
-🔗 *[ Grupo Oficial ]* https://chat.whatsapp.com/FCS6htvAmlT7nq006lxU4I    
-🔗 *[ Grupo No Oficial de Wirk para Bots y Personas que les Gusta Usarlos ]* https://chat.whatsapp.com/If3WAOMJqZp2WLqDp9n4Cw  
+🔗 *[Grupo Oficial]* https://chat.whatsapp.com/FCS6htvAmlT7nq006lxU4I  
+🔗 *[Grupo No Oficial de Wirk para Bots y Personas que les Gusta Usarlos]* https://chat.whatsapp.com/If3WAOMJqZp2WLqDp9n4Cw  
       `;
       // Envía el mensaje
       await conn.reply(m.chat, message, m);
