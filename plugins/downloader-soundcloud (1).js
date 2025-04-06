@@ -74,7 +74,8 @@ let handler = async (m, { conn, text }) => {
   }
 };
 
-handler.customPrefix = /audio|Audio/i;
+handler.customPrefix = /au|A/i;
+handler.command = ['dio', 'udio'];
 handler.help = ['play'];
 handler.tags = ['play'];
 
