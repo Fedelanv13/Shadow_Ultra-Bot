@@ -42,7 +42,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
             // Si el usuario responde con 'audio', ejecutar el comando ytmp3
             if (response === 'audio') {
-                await conn.reply(m.chat, `${usedPrefix}ytmp3 ${video.url}`, m);
+                await conn.reply(m.chat, `${usedPrefix}playaudio ${video.url}`, m);
                 await m.react('✅');
             }
 
