@@ -317,7 +317,9 @@ ${readMore}
                 isForwarded: true,
                 forwardingScore: 0,
                 externalAdReply: {
-                    title: '⏤͟͞ू⃪ ፝͜⁞Sʜᴀᴅᴏᴡ✰⃔࿐\nNᴜᴇᴠᴀ Vᴇʀsɪᴏɴ Uʟᴛʀᴀ 🚀 💫',
+                    title: '❖⊰✧  𝒮ʰᴀᵈᴏʷ ᵁˡᵗʳᴀ ᴹᴰ ⊱❖\n
+✨Nᴜᴇᴠᴀ ᴇᴅɪᴄɪᴏɴ 𝒮ʰᴀᵈᴏʷ ✨\n
+🚀 ᵁˡᵗʳᵃ ᴇᵛᴏˡᵘᵗᴵᴼᴺ💫',
                     thumbnailUrl: perfil,
                     mediaType: 1,
                     renderLargerThumbnail: false,
