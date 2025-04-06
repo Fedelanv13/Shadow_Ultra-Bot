@@ -31,14 +31,14 @@ let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, com
 👤 ¡Hᴏʟᴀ, ${taguser}! 
 💬 ${saludo}
 
-⏳ Activo: ${uptime} 
-👥 Usuarios: ${totalreg} 
-🔧 Versión: 3.0.0
+⏳ *Activo:* ${uptime} 
+👥 *Usuarios:* ${totalreg} 
+🔧 _Versión:_ 3.0.0
 
-💰 Gemas: ${diamantes} 
-✨ Exp: ${exp} 
-🎯 Nivel: ${level} 
-🏅 Rango: ${role}
+💰 \`Gemas:\` ${diamantes} 
+✨ _Exp:_ ${exp} 
+🎯 *Nivel:* ${level} 
+🏅 *Rango:* ${role}
 
 ${readMore}
 
