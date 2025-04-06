@@ -40,14 +40,14 @@ let handler = async (m, { conn, text }) => {
     if (!video) throw new Error("No se encontraron resultados.");
 
     // Actualizar el mensaje de espera mientras obtenemos los datos
-    await conn.editMessage(m.chat, waitMessage.key, { text: "```🔄 Buscando el enlace de descarga...```" });
+    await conn.sendMessage(m.chat, { text: "```🔄 Buscando el enlace de descarga...```", react: { text: "🔄", key: m.key } });
 
     // Obtener datos de descarga de forma asíncrona
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
 
     // Actualizar el mensaje de espera mientras se envía el audio
-    await conn.editMessage(m.chat, waitMessage.key, { text: "```📤 Enviando el audio...```" });
+    await conn.sendMessage(m.chat, { text: "```📤 Enviando el audio...```", react: { text: "🔄", key: m.key } });
 
     // Enviar el audio inmediatamente después de obtener la URL de descarga
     const audioMessage = {
@@ -60,21 +60,13 @@ let handler = async (m, { conn, text }) => {
     // Enviar el audio
     await conn.sendMessage(m.chat, audioMessage, { quoted: m });
 
-    // Eliminar el mensaje de espera una vez que el audio ha sido enviado
-    await conn.deleteMessage(m.chat, waitMessage.key);
-
     // Reaccionar con una confirmación profesional
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (error) {
     console.error("Error:", error);
 
-    // Eliminar el mensaje de espera si hubo un error
-    if (waitMessage) {
-      await conn.deleteMessage(m.chat, waitMessage.key);
-    }
-
-    // Reaccionar con un error profesional
+    // Reaccionar con un error profesional si algo falla
     await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
     conn.reply(m.chat, '*`Error al procesar tu solicitud.`*', m);
   }
