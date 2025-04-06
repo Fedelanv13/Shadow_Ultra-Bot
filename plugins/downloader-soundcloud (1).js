@@ -31,17 +31,23 @@ let handler = async (m, { conn, text }) => {
 
   let waitMessage;
   try {
-    // Enviar mensaje de espera
-    waitMessage = await conn.sendMessage(m.chat, { react: { text: "🔄", key: m.key } });
+    // Enviar mensaje de espera inicial
+    waitMessage = await conn.sendMessage(m.chat, { text: "```🔍 Buscando tu audio, espera un momento... 🔄```", react: { text: "🔄", key: m.key } });
 
     // Buscar en YouTube de forma asincrónica
     const searchResults = await yts(text.trim());
     const video = searchResults.videos[0];
     if (!video) throw new Error("No se encontraron resultados.");
 
+    // Actualizar el mensaje de espera mientras obtenemos los datos
+    await conn.editMessage(m.chat, waitMessage.key, { text: "```🔄 Buscando el enlace de descarga...```" });
+
     // Obtener datos de descarga de forma asíncrona
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
+
+    // Actualizar el mensaje de espera mientras se envía el audio
+    await conn.editMessage(m.chat, waitMessage.key, { text: "```📤 Enviando el audio...```" });
 
     // Enviar el audio inmediatamente después de obtener la URL de descarga
     const audioMessage = {
