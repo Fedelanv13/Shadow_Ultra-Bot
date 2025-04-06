@@ -25,16 +25,19 @@ const fetchWithRetries = async (url, maxRetries = 2) => {
 
 // Handler principal
 let handler = async (m, { conn, text }) => {
-  if (!text || !text.trim()) return;
+  if (!text || !text.trim()) {
+    return conn.reply(m.chat, '*[ ℹ️ ] Ingresa un título de YouTube.*\n\n*[ 💡 ] Ejemplo:* Corazón Serrano - Mix Poco Yo', m);
+  }
 
+  let waitMessage;
   try {
-    // Reaccionar al mensaje inicial con una reacción profesional
-    await conn.sendMessage(m.chat, { react: { text: "🔄", key: m.key } });
+    // Enviar mensaje de espera
+    waitMessage = await conn.sendMessage(m.chat, { react: { text: "🔄", key: m.key } });
 
     // Buscar en YouTube de forma asincrónica
     const searchResults = await yts(text.trim());
     const video = searchResults.videos[0];
-    if (!video) throw new Error("No se encontraron resultados.")
+    if (!video) throw new Error("No se encontraron resultados.");
 
     // Obtener datos de descarga de forma asíncrona
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
@@ -43,7 +46,8 @@ let handler = async (m, { conn, text }) => {
     // Enviar el audio inmediatamente después de obtener la URL de descarga
     const audioMessage = {
       audio: { url: apiData.download.url },
-      mimetype: "audio/mpeg", ptt: true,
+      mimetype: "audio/mpeg",
+      ptt: true,
       fileName: `${video.title}.mp3`,
     };
 
@@ -59,8 +63,14 @@ let handler = async (m, { conn, text }) => {
   } catch (error) {
     console.error("Error:", error);
 
+    // Eliminar el mensaje de espera si hubo un error
+    if (waitMessage) {
+      await conn.deleteMessage(m.chat, waitMessage.key);
+    }
+
     // Reaccionar con un error profesional
     await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
+    conn.reply(m.chat, '*`Error al procesar tu solicitud.`*', m);
   }
 };
 
