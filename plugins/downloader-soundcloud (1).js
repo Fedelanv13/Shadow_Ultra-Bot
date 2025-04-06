@@ -74,7 +74,7 @@ let handler = async (m, { conn, text }) => {
   }
 };
 
-handler.command = ['play', 'mp3', 'playaudio'];
+handler.command = ['playx', 'mp3', 'playaudio'];
 handler.help = ['play'];
 handler.tags = ['play'];
 
