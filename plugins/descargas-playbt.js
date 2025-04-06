@@ -88,7 +88,7 @@ function generateButtons(video, usedPrefix) {
             type: 1
         },
         {
-            buttonId: `${usedPrefix}ytmp4 ${video.url}`,
+            buttonId: `${usedPrefix}ytmp4x ${video.url}`,
             buttonText: { displayText: '📹 Descargar Vídeo' },
             type: 1
         }
