@@ -74,7 +74,7 @@ let handler = async (m, { conn, text }) => {
   }
 };
 
-handler.command = ['playx', 'mp3', 'playaudio'];
+handler.customPrefix = /audio|Audio/i;
 handler.help = ['play'];
 handler.tags = ['play'];
 
