@@ -16,7 +16,6 @@ const savetube = {
     'user-agent': 'Postify/1.0.0'
   },
   formats: ['144', '240', '360', '480', '720', '1080', 'mp3'],
-  //formats: ['144', '240', '360', '480', 'mp3'],
 
   crypto: {
     hexToBuffer: (hexString) => {
@@ -183,41 +182,51 @@ const savetube = {
 const handler = async (m, { conn, args, command }) => {
   if (args.length < 1) return m.reply(`*[ ℹ️ ] Ingresa una URL de un video o audio de YouTube*`);
 
-  let url = args[0];
-  let format = command === 'ytmp3' ? 'mp3' : args[1] || '720';
+  const url = args[0];
+  const format = command === 'ytmp3' ? 'mp3' : args[1] || '360';
 
   if (!savetube.isUrl(url)) return m.reply("Por favor, ingresa un link válido de YouTube.");
 
   try {
     await m.react('🕒');
-    let res = await savetube.download(url, format);
+
+    const res = await savetube.download(url, format);
     if (!res.status) {
       await m.react('✖️');
-      return m.reply(`*Error:* ${res.error}`);
+      return m.reply(`❌ *Error:* ${res.error}`);
     }
 
-    let { title, download, type } = res.result;
+    const { title, download, type, thumbnail, quality, duration } = res.result;
+
+    const caption = `🎬 *${title}*\n📥 *Formato:* ${type} ${quality}p\n⏱ *Duración:* ${duration}`;
 
     if (type === 'video') {
-      await conn.sendMessage(m.chat, { 
-        video: { url: download }
+      await conn.sendMessage(m.chat, {
+        video: { url: download },
+        caption,
+        fileName: `${title}.mp4`,
+        mimetype: 'video/mp4'
       }, { quoted: m });
     } else {
-      await conn.sendMessage(m.chat, { 
-        audio: { url: download }, 
-        mimetype: 'audio/mpeg', 
-        fileName: `${title}.mp3` 
+      await conn.sendMessage(m.chat, {
+        audio: { url: download },
+        caption,
+        mimetype: 'audio/mpeg',
+        ptt: true,
+        fileName: `${title}.mp3`
       }, { quoted: m });
     }
+
     await m.react('✅');
   } catch (e) {
+    console.error(e);
     await m.react('✖️');
-    m.reply(`*¡Fallo en la descarga!*`);
+    m.reply(`*❌ ¡Fallo en la descarga!*\n_Mensaje:_ ${e.message}`);
   }
 };
 
-handler.help = ['ytmp4 *<url>*', 'ytmp3 *<url>*'];
+handler.help = ['ytmp4x <url>', 'ytmp3 <url>'];
 handler.command = ['ytmp4x', 'ytmp3'];
-handler.tags = ['dl']
+handler.tags = ['dl'];
 
 export default handler;
