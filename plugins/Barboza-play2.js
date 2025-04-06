@@ -57,8 +57,13 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const { title, thumbnail, timestamp, views, ago, url } = videoInfo;
     const thumb = (await conn.getFile(thumbnail))?.data;
 
+    // Reacción de búsqueda
+    m.react('🔍');
+
     if (command === 'play' || command === 'yta' || command === 'mp3') {
       const api = await ddownr.download(url, 'mp3');
+      // Reacción de descarga
+      m.react('📥');
       await conn.sendMessage(m.chat, {
         audio: { url: api.downloadUrl },
         mimetype: "audio/mpeg"
@@ -82,6 +87,8 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
           if (downloadUrl) {
             success = true;
+            // Reacción de video listo
+            m.react('✅');
             await conn.sendMessage(m.chat, {
               video: { url: downloadUrl },
               mimetype: 'video/mp4',
@@ -116,4 +123,4 @@ export default handler;
 function formatViews(views) {
   if (views >= 1000) return (views / 1000).toFixed(1) + 'k (' + views.toLocaleString() + ')';
   else return views.toString();
-}
+  }
