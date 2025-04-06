@@ -34,13 +34,7 @@ let handler = async (m, { conn, text }) => {
     // Buscar en YouTube de forma asincrónica
     const searchResults = await yts(text.trim());
     const video = searchResults.videos[0];
-    if (!video) throw new Error("No se encontraron resultados.");
-
-    // Enviar mensaje de espera con un estilo profesional (rápido)
-    const waitMessage = await conn.sendMessage(m.chat, {
-      text: `*Procesando tu solicitud...* ⏳\n\n*Estamos preparando el archivo de audio para ti.*\n\n*🎧 Canción:* ${video.title}\n\nPor favor, espera mientras descargamos el audio. Este proceso puede tardar solo unos segundos. *Gracias por tu paciencia.*`,
-      quoted: m
-    });
+    if (!video) throw new Error("No se encontraron resultados.")
 
     // Obtener datos de descarga de forma asíncrona
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
