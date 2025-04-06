@@ -4,14 +4,14 @@ const handler = async (m, { conn, text, command }) => {
     if (command === 'script') {
       // Responde con el mensaje profesional y emojis
       const message = `
-⚡ **Shadow Ultra Edited** ⚡  
+⚡ _*Shadow Ultra Edited*_ ⚡  
 🔧 *Repositorio de la versión editada*  
-🔗 **[Repositorio Edited](https://github.com/Ado926/Shadow-UltraMD_vEdited)**  
+🔗 *[Repositorio Edited](https://github.com/Ado926/Shadow-UltraMD_vEdited)*  
 
 🔧 *Repositorio Original*  
-🔗 **[Repositorio Original](https://github.com/CrxstianEscobar/ShadowUltra-MD)**  
+🔗 *[Repositorio Original](https://github.com/CrxstianEscobar/ShadowUltra-MD)* 
 
-🚀 **Mejora tu experiencia con Shadow 👻**  
+🚀 \`\`\`Mejora tu experiencia con Shadow 👻\`\`\`  
 
 💬 *Para más información, sigue el repositorio original o únete al grupo:*  
 🔗 *[Grupo Oficial]* https://chat.whatsapp.com/FCS6htvAmlT7nq006lxU4I  
