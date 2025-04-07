@@ -143,8 +143,8 @@ export async function handler(chatUpdate) {
                 if (!('jadibotmd' in settings)) settings.jadibotmd = false
                if (!('autobio' in settings)) settings.autobio = false
                 if (!('antiPrivate' in settings)) settings.antiPrivate = false
-                if (!('autoread' in settings)) settings.autoread = false
-                if (!('autoread2' in settings)) settings.autoread2 = false
+                if (!('autoread' in settings)) settings.autoread = true
+                if (!('autoread2' in settings)) settings.autoread2 = true
                 if (!('antiSpam' in settings)) settings.antiSpam = false
             } else global.db.data.settings[this.user.jid] = {
                 self: false,
@@ -153,7 +153,7 @@ export async function handler(chatUpdate) {
                 autobio: false,
                 antiPrivate: false,
                 autoread: true,
-                autoread2: false,
+                autoread2: true,
                 antiSpam: false,
                 status: 0
             }
