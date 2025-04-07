@@ -1,9 +1,4 @@
 
-import { promises as fs } from 'fs'
-import { join } from 'path'
-import { xpRange } from '../lib/levelling.js'
-import { plugins } from '../lib/plugins.js'
-
 let handler = async (m, { conn, __dirname }) => {
   try {
     const pp = './media/menus/Menu.jpg'
@@ -17,12 +12,13 @@ let handler = async (m, { conn, __dirname }) => {
     let date = d.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })
     let _uptime = process.uptime() * 1000
     let uptime = clockString(_uptime)
+    let taguser = '@' + m.sender.split('@s.whatsapp.net')[0]
 
     let str = `
 ╭═══〘 ✯✯✯✯✯✯✯✯✯ 〙══╮
-║    *TIBURON-BETA*
+║    𝐒𝐇𝐀𝐃𝐎𝐖 𝐁𝐎𝐓 - 𝐌𝐃
 ║≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡║
-║➤ *¡Hola ${name}!*
+║➤ *¡Hola ${taguser}!*
 ║≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡║
 ║➤ *Creador:* ANDRESV27728
 ║➤ *Fecha:* ${date}
@@ -35,105 +31,121 @@ let handler = async (m, { conn, __dirname }) => {
 ╰═══╡✯✯✯✯✯✯✯✯✯╞═══╯
 
 ┏━━━━━━━━━━━━━━━━┓
-┃ *< LISTA DE COMANDOS />*
+┃ *< COMANDOS PRINCIPALES />*
 ┃≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡┃
 
-📱 *COMANDOS PRINCIPALES*
-┃ • .allmenu - Mostrar todos los comandos
-┃ • .menu - Mostrar menú principal
-┃ • .help - Obtener ayuda
-┃ • .test - Probar funcionalidad del bot
+📱 *COMANDOS*
+┃ • .allmenu - Ver todos los comandos
+┃ • .menu - Menú principal
+┃ • .help - Ayuda general
+┃ • .test - Probar bot
 
-👥 *GESTIÓN DE GRUPOS*
-┃ • .add <número> - Añadir miembro
-┃ • .kick - Eliminar miembro
-┃ • .promote - Hacer admin
+👥 *GRUPOS*
+┃ • .add - Añadir miembros
+┃ • .kick - Eliminar miembros
+┃ • .promote - Dar admin
 ┃ • .demote - Quitar admin
-┃ • .setdesc - Establecer descripción
-┃ • .setname - Cambiar nombre
-┃ • .hidetag - Etiquetar invisiblemente
-┃ • .link - Obtener link del grupo
+┃ • .link - Link del grupo
+┃ • .hidetag - Mencionar a todos
 ┃ • .tagall - Etiquetar a todos
-┃ • .botcontrol - Activar/desactivar bot
-┃ • .afk [razón] - Activar modo ausente
+┃ • .welcome - Bienvenida
 
-🎮 *DIVERSIÓN Y JUEGOS*
-┃ • .kiss - Enviar sticker de beso
-┃ • .pat - Acariciar a alguien
-┃ • .slap - Dar una bofetada
+🎮 *JUEGOS Y DIVERSIÓN*
+┃ • .tictactoe - Tres en raya
+┃ • .simi - Chatbot
+┃ • .top - Rankings
+┃ • .gay - Medir gay
+┃ • .pregunta - Preguntas
+┃ • .verdad - Verdad o reto
+┃ • .fake - Crear imagen falsa
+┃ • .attp - Sticker con texto
 ┃ • .emojimix - Mezclar emojis
-┃ • .tictactoe - Jugar TicTacToe
-┃ • .cr7 - Contenido de CR7
-┃ • .messi - Contenido de Messi
 
 ⬇️ *DESCARGAS*
-┃ • .play - Reproducir música
-┃ • .spotify - Descargar de Spotify
-┃ • .fb - Descargar video de Facebook
-┃ • .tiktok - Descargar video de TikTok
-┃ • .ig - Descargar de Instagram
-┃ • .twitter - Descargar de Twitter
-┃ • .yt - Descargar video de YouTube
-┃ • .mediafire - Descargar de MediaFire
-┃ • .gdrive - Descargar de Google Drive
-┃ • .pinterest - Descargar de Pinterest
+┃ • .play - Descargar música
+┃ • .playvid - Descargar video
+┃ • .tiktok - Descargar TikTok
+┃ • .instagram - Descargar Instagram
+┃ • .facebook - Descargar Facebook
+┃ • .spotify - Descargar Spotify
+┃ • .pinterest - Descargar Pinterest
+┃ • .mediafire - Descargar Mediafire
+┃ • .gdrive - Descargar Google Drive
 
 🔍 *BÚSQUEDA*
 ┃ • .google - Buscar en Google
-┃ • .lyrics - Buscar letras de canciones
 ┃ • .yts - Buscar en YouTube
-┃ • .pinterest - Buscar imágenes
+┃ • .lyrics - Buscar letras
 ┃ • .playstore - Buscar apps
 ┃ • .mercadolibre - Buscar productos
-┃ • .animeinfo - Buscar info de anime
 
 🛠️ *HERRAMIENTAS*
-┃ • .toimg - Convertir sticker a imagen
-┃ • .tomp3 - Convertir video a audio
-┃ • .tovideo - Convertir a formato video
+┃ • .toimg - Sticker a imagen
+┃ • .tomp3 - Video a MP3
+┃ • .tovideo - Sticker a video
 ┃ • .sticker - Crear sticker
-┃ • .ip - Información de IP
-┃ • .wallpaper - Obtener fondos de pantalla
+┃ • .translate - Traducir texto
+┃ • .ocr - Texto de imagen
+┃ • .tts - Texto a voz
 
-👮‍♂️ *CONTROL DE ADMIN*
+👮‍♂️ *ADMIN*
 ┃ • .enable - Activar funciones
 ┃ • .disable - Desactivar funciones
-┃ • .antivirus - Protección antivirus
-┃ • .antilink - Protección antilink
-┃ • .antitoxic - Filtro anti-tóxico
-┃ • .antiprivado - Anti mensajes privados
-┃ • .welcome - Control mensaje bienvenida
+┃ • .antifake - Anti números falsos
+┃ • .antilink - Anti enlaces
+┃ • .antispam - Anti spam
+┃ • .antiprivado - Anti chat privado
+┃ • .modoadmin - Solo admins
 
-📊 *SISTEMA E INFO*
-┃ • .ping - Revisar latencia del bot
-┃ • .runtime - Tiempo activo del bot
+📊 *SISTEMA*
+┃ • .ping - Velocidad
+┃ • .runtime - Tiempo activo
 ┃ • .status - Estado del bot
-┃ • .creator - Mostrar info del creador
-┃ • .infobot - Información del bot
+┃ • .info - Información
+┃ • .owner - Creador
+┃ • .script - Repositorio
 
----
-🔰 *Notas Importantes*
-• Todos los comandos empiezan con .
-• Algunos comandos requieren privilegios de admin
-• Reporta cualquier error al creador: ANDRESV27728
-┗━━━━━━━━━━━━━━━━┛`.trim()
+🔞 *NSFW* 
+┃ • .nsfw - Activar contenido +18
+┃ • .nsfwmenu - Menú NSFW
+┃ • .loli - Imágenes loli
+┃ • .waifu - Imágenes waifu
+┃ • .hentai - Contenido hentai
+┃ • .rule34 - Regla 34
 
-    conn.sendMessage(m.chat, { image: { url: pp }, caption: str }, { quoted: m })
+🎲 *FREE FIRE*
+┃ • .bermuda - Mapa Bermuda
+┃ • .kalahari - Mapa Kalahari
+┃ • .alpes - Mapa Alpes
+┃ • .nexterra - Mapa Nexterra
+┃ • .inmasc4 - VS Masculino 4v4
+┃ • .infem4 - VS Femenino 4v4
+┃ • .inmixto4 - VS Mixto 4v4
+┃ • .inmasc6 - VS Masculino 6v6
+┃ • .infem6 - VS Femenino 6v6
+┃ • .inmixto6 - VS Mixto 6v6
+┃ • .sala - Crear sala
+┃ • .encuesta - Hacer encuesta
+
+----------------------------
+🔰 *NOTAS*
+• Usa . al inicio de cada comando
+• No hagas spam de comandos
+• No uses el bot en privado
+• Reporta errores con .report
+┗━━━━━━━━━━━━━━━━┛
+    `.trim()
+
+    conn.sendMessage(m.chat, { image: { url: pp }, caption: str, mentions: [m.sender] }, { quoted: m })
+
   } catch (e) {
-    conn.reply(m.chat, '*[❗] Lo siento, ocurrió un error al mostrar el menú.*', m)
     console.error(e)
+    throw e
   }
 }
 
 handler.help = ['allmenu']
-handler.tags = ['main']
-handler.command = /^(allmenu|menuall|allcmd|cmdall)$/i
+handler.tags = ['main'] 
+handler.command = ['allmenu', 'listamenu']
 
 export default handler
-
-function clockString(ms) {
-  let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000)
-  let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
-  let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
-  return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
-}
