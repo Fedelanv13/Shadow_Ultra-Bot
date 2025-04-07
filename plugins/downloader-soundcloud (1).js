@@ -31,7 +31,7 @@ let handler = async (m, { conn, text }) => {
 
   try {
     // Enviar un mensaje de espera inicial
-    await conn.sendMessage(m.chat, { text: "```🔍 Buscando tu audio, espera un momento...```", react: { text: "🔄", key: m.key } });
+    await conn.sendMessage(m.chat, { text: "*Accediendo a la carpeta de musica 👻* ```🔍 Espera un momento, deja veo si lo encuentro 🤠...```", react: { text: "🔄", key: m.key } });
 
     // Buscar en YouTube de forma asincrónica
     const searchResults = await yts(text.trim());
