@@ -26,12 +26,12 @@ const fetchWithRetries = async (url, maxRetries = 2) => {
 // Handler principal
 let handler = async (m, { conn, text }) => {
   if (!text || !text.trim()) {
-    return conn.reply(m.chat, '*[ ℹ️ ] Ingresa un título de YouTube.*\n\n*[ 💡 ] Ejemplo:* Corazón Serrano - Mix Poco Yo', m);
+    return conn.reply(m.chat, '*[ ℹ️ ] Ingresa el name de una rola.*\n\n*[ 💡 ] Ejemplo:* Tren al sur', m);
   }
 
   try {
     // Enviar un mensaje de espera inicial
-    await conn.sendMessage(m.chat, { text: "*Accediendo a la carpeta de musica 👻* ```🔍 Espera un momento, deja veo si lo encuentro 🤠...```", react: { text: "🔄", key: m.key } });
+    await conn.sendMessage(m.chat, { text: "*🎧 Accediendo a la carpeta de musica 👻* ```🔍 Espera un momento busco tu audio rola, deja veo si lo encuentro we 🤠...```", react: { text: "🔄", key: m.key } });
 
     // Buscar en YouTube de forma asincrónica
     const searchResults = await yts(text.trim());
