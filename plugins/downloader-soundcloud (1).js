@@ -44,21 +44,18 @@ let handler = async (m, { conn, text }) => {
     const apiData = await fetchWithRetries(apiUrl);
 
     // Comprobamos que apiData tenga los datos necesarios
-    console.log("Datos de API:", apiData);
-
-    // Extraemos los datos de música
-    const { name, download } = apiData;
+    const { download } = apiData;
 
     if (!download) throw new Error("No se encontró la URL de descarga.");
 
-    // Creamos el objeto del mensaje para enviar solo el audio
+    // Creamos el objeto del mensaje solo con el archivo de audio
     const audioMessage = {
       audio: { url: download },
       mimetype: 'audio/mp4',
-      fileName: `${name}.mp3`,
+      fileName: `${video.title}.mp3`,
     };
 
-    // Enviamos el mensaje de audio
+    // Enviar el mensaje de audio
     await conn.sendMessage(m.chat, audioMessage, { quoted: m });
 
     // Reacción de éxito
