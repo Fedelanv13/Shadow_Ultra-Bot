@@ -4,7 +4,7 @@ let handler = async(m, { conn, args, text }) => {
 
 if (!text) return m.reply(' Ingrese Un Link De YouTube\n');
 
-m.react("👻");
+m.react("⏳");
 
 let video;
 try {
@@ -33,7 +33,7 @@ await conn.sendMessage(m.chat, {
     m.react("⭐");
 }
 
-handler.command = ['ytv', 'ytmp2', 'yt']
+handler.command = ['ytv', 'ytmp4', 'yt']
 handler.register = true 
 handler.estrellas = 0
 export default handler;
