@@ -47,51 +47,19 @@ let handler = async (m, { conn, text }) => {
     console.log("Datos de API:", apiData);
 
     // Extraemos los datos de música
-    const { name, albumname, artist, url, thumb, duration, download } = apiData;
+    const { name, download } = apiData;
 
     if (!download) throw new Error("No se encontró la URL de descarga.");
 
-    // Validamos si la miniatura (thumb) es una URL válida
-    let thumbnailUrl = thumb;
-    if (typeof thumb !== 'string') {
-      console.log("El valor de 'thumb' no es una URL válida. Usando una miniatura predeterminada.");
-      thumbnailUrl = "https://via.placeholder.com/150"; // URL predeterminada si no es válida
-    }
-
-    // Verificamos que thumbnailUrl sea una URL válida
-    const isValidUrl = (url) => {
-      try {
-        new URL(url);
-        return true;
-      } catch (err) {
-        return false;
-      }
-    };
-
-    if (!isValidUrl(thumbnailUrl)) {
-      console.log("La miniatura no es una URL válida. Usando miniatura predeterminada.");
-      thumbnailUrl = "https://via.placeholder.com/150"; // Miniatura predeterminada
-    }
-
-    // Creamos el objeto del mensaje para enviar, usando la URL de la miniatura validada
-    const doc = {
+    // Creamos el objeto del mensaje para enviar solo el audio
+    const audioMessage = {
       audio: { url: download },
       mimetype: 'audio/mp4',
       fileName: `${name}.mp3`,
-      contextInfo: {
-        externalAdReply: {
-          showAdAttribution: true,
-          mediaType: 2,
-          mediaUrl: url,
-          title: name,
-          sourceUrl: url,
-          thumbnail: thumbnailUrl // Usamos la URL de la miniatura validada
-        }
-      }
     };
 
     // Enviamos el mensaje de audio
-    await conn.sendMessage(m.chat, doc, { quoted: m });
+    await conn.sendMessage(m.chat, audioMessage, { quoted: m });
 
     // Reacción de éxito
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
