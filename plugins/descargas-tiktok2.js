@@ -37,7 +37,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
         const buttons = [
             {
                 buttonId: `${usedPrefix}tiktokmp3 ${args[0]}`, // Este es el comando para descargar el audio
-                buttonText: { displayText: "Enviar Audio" },
+                buttonText: { displayText: "🔈 Enviar Audio 🎧" },
                 type: 1
             }
         ];
