@@ -1,6 +1,5 @@
 import { WAMessageStubType } from '@whiskeysockets/baileys'
 import fetch from 'node-fetch'
-import { generateWAMessageFromContent, prepareWAMessageMedia } from '@whiskeysockets/baileys'
 
 export async function before(m, { conn, participants, groupMetadata }) {
   if (!m.messageStubType || !m.isGroup) return true
@@ -19,87 +18,46 @@ export async function before(m, { conn, participants, groupMetadata }) {
       img = await (await fetch(defaultImage)).buffer()
     }
 
-    const groupName = groupMetadata.subject  
-    const groupDesc = groupMetadata.desc || 'sin descripción'  
+    const groupName = groupMetadata.subject
+    const groupDesc = groupMetadata.desc || 'sin descripción'
 
-    if (m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD) {  
-      let text = chat.sWelcome  
-        ? chat.sWelcome  
-            .replace(/@user/g, taguser)  
-            .replace(/@group/g, groupName)  
-            .replace(/@desc/g, groupDesc)  
-        : `𓆩°»｡˚ ∾･⁙･ ღ ➵ ⁘ ➵ ღ ･⁙･∾ ˚ ｡«°𓆪
+    // Nueva bienvenida
+    if (m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD) {
+      let text = chat.sWelcome
+        ? chat.sWelcome
+            .replace(/@user/g, taguser)
+            .replace(/@group/g, groupName)
+            .replace(/@desc/g, groupDesc)
+        : `🦋✧ 𝗕𝗶𝗲𝗻𝘃𝗲𝗻𝗶𝗱𝗼 𝗮𝗹 𝗴𝗿𝘂𝗽𝗼 ✧🦋
+  
+🎉 *${taguser}* acaba de unirse al grupo! 🎉
+  
+📌 𝗡𝗼𝗺𝗯𝗿𝗲 𝗱𝗲𝗹 𝗴𝗿𝘂𝗽𝗼: *${groupName}*
+📜 𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝗰𝗶𝗼́𝗻: *${groupDesc}*
+  
+¡Esperamos que disfrutes tu tiempo aquí! 💫✨`
 
-❍⌇─➭ Wᴇʟᴄᴏᴍᴇ ᴛᴏ Gʀᴏᴜᴘ ::
-๑ ˚ ͙۪۪̥${taguser} 👋🏻꒱
+      await conn.sendMessage(m.chat, { image: img, caption: text, mentions: [who] }, { quoted: fkontak })
+    } 
+    // Nueva despedida
+    else if (
+      m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||
+      m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE
+    ) {
+      let text = chat.sBye
+        ? chat.sBye
+            .replace(/@user/g, taguser)
+            .replace(/@group/g, groupName)
+            .replace(/@desc/g, groupDesc)
+        : `⚡️👋 *Adiós, ${taguser}* 👋⚡️
 
-┌ `ɢʀᴏᴜᴘ::`
-☕ ᩙᩞ✑ ${groupName}
-└┬ ɴᴇᴡ ᴍᴇᴍʙᴇʀ
-︱·˚🤍 Disfruta del grupo.
-└╾ׅ╴ׂꨪ╌╼᪶╾᪶ ۪〫┄ׅ⃯፝֟╌╼᪶֘╾᪶╌ׅꨪ╶۪╼┘
+¡Te vamos a extrañar, pero te deseamos lo mejor! ✨
 
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴏᴏɴ ғᴏʀᴄᴇ ᴛᴇᴀᴍ`
+📌 *${groupName}* siempre te recordará. ¡Mantente en contacto! 💖`
 
-      const buttons = [
-        {
-          buttonId: `!join ${who}`,
-          buttonText: { displayText: '📝 Unirte al chat' },
-          type: 1
-        }
-      ];
-
-      const buttonMessage = {
-        image: img,
-        caption: text,
-        mentions: [who],
-        footer: `© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴏᴏɴ ғᴏʀᴄᴇ ᴛᴇᴀᴍ`,
-        buttons: buttons,
-        headerType: 1
-      };
-
-      await conn.sendMessage(m.chat, buttonMessage, { quoted: fkontak });  
-    } else if (  
-      m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE ||  
-      m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE  
-    ) {  
-      let text = chat.sBye  
-        ? chat.sBye  
-            .replace(/@user/g, taguser)  
-            .replace(/@group/g, groupName)  
-            .replace(/@desc/g, groupDesc)  
-        : `𓆩°»｡˚ ∾･⁙･ ღ ➵ ⁘ ➵ ღ ･⁙･∾ ˚ ｡«°𓆪
-
-❍⌇─➭ Sᴇᴇ ʏᴏᴜ Lᴀᴛᴇʀ ::
-๑ ˚ ͙۪۪̥${taguser} 🖕🏻꒱
-
-┌ `ᴘᴜᴛᴀ ᴇʟɪᴍɪɴᴀᴅᴀ`
-└┬ ᴇx ᴍᴇᴍʙᴇʀ
-︱·˚👻 Ojalá y lo violen los ngros.
-└╾ׅ╴ׂꨪ╌╼᪶╾᪶ ۪〫┄ׅ⃯፝֟╌╼᪶֘╾᪶╌ׅꨪ╶۪╼┘
-
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴏᴏɴ ғᴏʀᴄᴇ ᴛᴇᴀᴍ`
-
-      const buttons = [
-        {
-          buttonId: `!goodbye ${who}`,
-          buttonText: { displayText: '💔 Despedirse' },
-          type: 1
-        }
-      ];
-
-      const buttonMessage = {
-        image: img,
-        caption: text,
-        mentions: [who],
-        footer: `© ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴏᴏɴ ғᴏʀᴄᴇ ᴛᴇᴀᴍ`,
-        buttons: buttons,
-        headerType: 1
-      };
-
-      await conn.sendMessage(m.chat, buttonMessage, { quoted: fkontak });  
+      await conn.sendMessage(m.chat, { image: img, caption: text, mentions: [who] }, { quoted: fkontak })
     }
   }
 
-  return true;
-}
+  return true
+                                      }
