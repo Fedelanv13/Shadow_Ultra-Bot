@@ -70,12 +70,12 @@ async function searchVideos(query) {
 
 // Función para formatear el texto del mensaje con los detalles del video
 function formatMessageText(video) {
-    let messageText = `*🍌 Resultado de búsqueda para:* \`${video.title}\`\n\n`;
-    messageText += `*⌛ Duración:* ${video.duration || 'No disponible'}\n`;
-    messageText += `*📓 Canal:* ${video.channel || 'Desconocido'}\n`;
-    messageText += `*📓 Publicado:* ${convertTimeToSpanish(video.published)}\n`;
-    messageText += `*👁️ Vistas:* ${video.views || 'No disponible'}\n`;
-    messageText += `*🔗 Enlace al video:* _[Ver Video Link:_ ${video.url}\n`;
+    let messageText = `*🍌 ɾҽʂυʅƚαԃσ ԃҽ Ⴆύʂϙυҽԃα ραɾα:* \`${video.title}\`\n\n`;
+    messageText += `*⌛ 𝗗𝘂𝗿𝗮𝗰𝗶𝗼́𝗻:* ${video.duration || 'No disponible'}\n`;
+    messageText += `*📓 𝗖𝗮𝗻𝗮𝗹:* ${video.channel || 'Desconocido'}\n`;
+    messageText += `*📓 𝗣𝘂𝗯𝗹𝗶𝗰𝗮𝗱𝗼:* ${convertTimeToSpanish(video.published)}\n`;
+    messageText += `*👁️ 𝗩𝗶𝘀𝘁𝗮𝘀:* ${video.views || 'No disponible'}\n`;
+    messageText += `*🔗 𝗘𝗻𝗹𝗮𝗰𝗲 𝗮𝗹 𝘃𝗶𝗱𝗲𝗼:* _[ 𝗩𝗲𝗿 𝗩𝗶𝗱𝗲𝗼 𝗟𝗶𝗻𝗸:_ ${video.url} ]\n`;
     return messageText;
 }
 
@@ -84,12 +84,12 @@ function generateButtons(video, usedPrefix) {
     return [
         {
             buttonId: `${usedPrefix}ytmp3 ${video.url}`,
-            buttonText: { displayText: '🔊 ```Descargar Audio```' },
+            buttonText: { displayText: '🔊 ძᥱsᥴᥲrgᥲr ᥲᥙძі᥆' },
             type: 1
         },
         {
             buttonId: `${usedPrefix}play2 ${video.url}`,
-            buttonText: { displayText: '📹 ```Descargar Vídeo```' },
+            buttonText: { displayText: '📹 ժҽscαɾցαɾ ѵíժҽօ' },
             type: 1
         }
     ];
