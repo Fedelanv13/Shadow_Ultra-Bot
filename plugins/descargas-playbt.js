@@ -12,12 +12,12 @@ const handler = async (m, { conn, args, usedPrefix }) => {
   // Mensaje de espera actualizado
   await conn.sendMessage(m.chat, {
     text: `
-╭━〔 *𝚈𝙾𝚄𝚃𝚄𝙱𝙴 𝙼𝙴𝙶𝙰 𝙱𝚄𝚂𝚀𝚄𝙴𝙳𝙰* 〕━╮
+╭━〔 *𝚈𝙾𝚄𝚃𝚄𝙱𝙴 𝙱𝚄𝚂𝚀𝚄𝙴𝙳𝙰* 〕━╮
 ┃ 🔎 Realizando la búsqueda...
 ┃ ⌛ En un momento te daremos el resultado.
 ┃ 
 ┃ 👻 Solo... ten paciencia estimado.
-╰━━━━━━━━━━━━━━━━━━━━━━━━━╯`,
+╰━━━━━━━━━━━━━━━━━━━━━╯`,
     quoted: m
   });
 
