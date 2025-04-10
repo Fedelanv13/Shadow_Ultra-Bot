@@ -63,11 +63,15 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     // Verificar si el texto es un enlace de YouTube
     const isLink = /^(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/.+$/.test(text.trim());
     let videoInfo;
-    
+
+    if (!text.trim()) {
+      return m.reply("⚠ Ingresa el nombre o link del que deseas buscar.");
+    }
+
     if (isLink) {
-      // Si es un enlace, no hacer búsqueda, solo proceder con la descarga
+      // Si es un enlace, se utiliza directamente
       const url = text.trim();
-      const search = await yts(url); // Usamos el link directamente para obtener la info
+      const search = await yts(url); // Usamos el enlace directamente para obtener la info
 
       if (!search.all.length) {
         return m.reply("⚠ No se encontraron resultados para el enlace proporcionado.");
@@ -75,11 +79,12 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
       videoInfo = search.all[0]; // Tomamos el primer resultado de la búsqueda
     } else {
-      // Si no es un enlace, proceder a buscar como normalmente se hacía
+      // Si no es un enlace, se realiza una búsqueda por nombre
       const search = await yts(text);
       if (!search.all.length) {
         return m.reply("⚠ No se encontraron resultados para tu búsqueda.");
       }
+
       videoInfo = search.all[0]; // Tomamos el primer resultado de la búsqueda
     }
 
@@ -148,4 +153,4 @@ export default handler;
 
 function formatViews(views) {
   return views >= 1000 ? (views / 1000).toFixed(1) + "k (" + views.toLocaleString() + ")" : views.toString();
-  }
+      }
