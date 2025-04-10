@@ -46,6 +46,9 @@ let handler = async (m, { conn, text }) => {
     // Extraer la información de la música
     const { name, albumname, artist, url, thumb, duration, download } = apiData;
 
+    // Obtener el archivo de la miniatura
+    const thumbData = await conn.getFile(thumb);
+    
     const doc = {
       audio: { url: download },
       mimetype: 'audio/mp4',
@@ -57,12 +60,12 @@ let handler = async (m, { conn, text }) => {
           mediaUrl: url,
           title: name,
           sourceUrl: url,
-          thumbnail: await (await conn.getFile(thumb)).data
+          thumbnail: thumbData.data
         }
       }
     };
 
-    // Enviar el audio inmediatamente después de obtener la URL de descarga
+    // Enviar el audio
     await conn.sendMessage(m.chat, doc, { quoted: m });
 
     // Reacción de éxito
