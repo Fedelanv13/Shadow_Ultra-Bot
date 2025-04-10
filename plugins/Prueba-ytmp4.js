@@ -60,16 +60,29 @@ const ddownr = {
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
-    if (!text.trim()) {
-      return conn.reply(m.chat, "Ingresa el nombre o link del que deseas buscar.", m);
+    // Verificar si el texto es un enlace de YouTube
+    const isLink = /^(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/.+$/.test(text.trim());
+    let videoInfo;
+    
+    if (isLink) {
+      // Si es un enlace, no hacer búsqueda, solo proceder con la descarga
+      const url = text.trim();
+      const search = await yts(url); // Usamos el link directamente para obtener la info
+
+      if (!search.all.length) {
+        return m.reply("⚠ No se encontraron resultados para el enlace proporcionado.");
+      }
+
+      videoInfo = search.all[0]; // Tomamos el primer resultado de la búsqueda
+    } else {
+      // Si no es un enlace, proceder a buscar como normalmente se hacía
+      const search = await yts(text);
+      if (!search.all.length) {
+        return m.reply("⚠ No se encontraron resultados para tu búsqueda.");
+      }
+      videoInfo = search.all[0]; // Tomamos el primer resultado de la búsqueda
     }
 
-    const search = await yts(text);
-    if (!search.all.length) {
-      return m.reply("⚠ No se encontraron resultados para tu búsqueda.");
-    }
-
-    const videoInfo = search.all[0];
     const { title, thumbnail, timestamp, views, ago, url } = videoInfo;
     const vistas = formatViews(views);
     const thumb = (await conn.getFile(thumbnail))?.data;
@@ -135,4 +148,4 @@ export default handler;
 
 function formatViews(views) {
   return views >= 1000 ? (views / 1000).toFixed(1) + "k (" + views.toLocaleString() + ")" : views.toString();
-               }
+  }
