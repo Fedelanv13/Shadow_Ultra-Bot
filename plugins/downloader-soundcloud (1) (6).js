@@ -47,7 +47,7 @@ let handler = async (m, { conn, text }) => {
     const audioMessage = {
       audio: { url: apiData.download.url },
       mimetype: "audio/mpeg",
-      ptt: true,  // Esto hace que se envíe como mensaje de voz
+      ptt: false,  // Esto hace que se envíe como mensaje de voz
       fileName: `${video.title}.mp3`,
     };
 
