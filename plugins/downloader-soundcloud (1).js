@@ -43,12 +43,21 @@ let handler = async (m, { conn, text }) => {
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
 
-    // Extraer la información de la música
+    // Comprobamos que apiData tenga los datos necesarios
+    console.log("Datos de API:", apiData);
+
+    // Extraemos los datos de música
     const { name, albumname, artist, url, thumb, duration, download } = apiData;
 
-    // Obtener el archivo de la miniatura
+    if (!download) throw new Error("No se encontró la URL de descarga.");
+
+    // Intentamos obtener el archivo de la miniatura
     const thumbData = await conn.getFile(thumb);
-    
+    if (!thumbData || !thumbData.data) {
+      throw new Error("No se pudo obtener la miniatura.");
+    }
+
+    // Creamos el objeto del mensaje para enviar
     const doc = {
       audio: { url: download },
       mimetype: 'audio/mp4',
@@ -65,17 +74,18 @@ let handler = async (m, { conn, text }) => {
       }
     };
 
-    // Enviar el audio
+    // Enviamos el mensaje de audio
     await conn.sendMessage(m.chat, doc, { quoted: m });
 
     // Reacción de éxito
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error al procesar el mensaje:", error);
 
-    // Reacción de error si algo falla
+    // Enviar un mensaje de error y reacción
     await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
+    await conn.reply(m.chat, `Ocurrió un error: ${error.message}`, m);
   }
 };
 
