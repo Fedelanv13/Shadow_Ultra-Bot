@@ -43,11 +43,11 @@ let handler = async (m, { conn, text }) => {
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
 
-    // Enviar el audio inmediatamente después de obtener la URL de descarga
+    // Enviar el audio como mensaje de voz (PTT)
     const audioMessage = {
       audio: { url: apiData.download.url },
       mimetype: "audio/mpeg",
-      opus: true,
+      ptt: true,  // Esto hace que se envíe como mensaje de voz
       fileName: `${video.title}.mp3`,
     };
 
