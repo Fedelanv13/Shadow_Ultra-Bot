@@ -145,6 +145,16 @@ const savetube = {
       if (!result.status) return result;
       const decrypted = await savetube.crypto.decrypt(result.data.data);
 
+      // Verificar la duración del video antes de permitir la descarga
+      const durationInMinutes = decrypted.duration / 60; // Convertir duración a minutos
+      if (durationInMinutes > 60) {
+        return {
+          status: false,
+          code: 400,
+          error: "El video es demasiado largo (más de 60 minutos) para ser descargado en este momento."
+        };
+      }
+
       const dl = await savetube.request(`https://${cdn}${savetube.api.download}`, {
         id: id,
         downloadType: format === 'mp3' ? 'audio' : 'video',
