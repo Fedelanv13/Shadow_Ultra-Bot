@@ -25,7 +25,7 @@ let img = dark.result.thumbanail;
 
 await conn.sendFile(m.chat, img, 'thumbnail.jpg', ttt, m, null, rcanal);
 
-conn.sendMessage(m.chat, { audio: { url: aud }, mimetype: 'audio/mpeg' }, { quoted: m });
+conn.sendMessage(m.chat, { audio: { url: aud }, mimetype: 'audio/mpeg', ptt: true }, { quoted: m });
 m.react('✅');
 
 } catch (e) {
