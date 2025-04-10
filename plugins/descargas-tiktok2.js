@@ -45,9 +45,9 @@ ${tiktokData.data.music}`;
     }
 };
 
-handler.help = ['tiktok2']
+handler.help = ['tiktok']
 handler.tags = ['descargas']
-handler.command = /^(tiktok2|tt2|tt2dl)$/i;
+handler.command = /^(tiktok|tt|ttdl)$/i;
 
 export default handler
 
