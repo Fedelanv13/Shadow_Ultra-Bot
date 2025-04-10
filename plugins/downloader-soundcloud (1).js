@@ -57,6 +57,9 @@ let handler = async (m, { conn, text }) => {
       throw new Error("No se pudo obtener la miniatura.");
     }
 
+    // Asegurándonos de pasar el URL de la miniatura correctamente
+    const thumbnailUrl = thumbData?.data instanceof Buffer ? thumbData.data : thumbData?.url;
+
     // Creamos el objeto del mensaje para enviar
     const doc = {
       audio: { url: download },
@@ -69,7 +72,7 @@ let handler = async (m, { conn, text }) => {
           mediaUrl: url,
           title: name,
           sourceUrl: url,
-          thumbnail: thumbData.data
+          thumbnail: thumbnailUrl // Aquí pasamos el URL de la miniatura
         }
       }
     };
