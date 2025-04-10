@@ -18,7 +18,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
         const videoURLWatermark = tiktokData.data.wmplay;  
         const infonya_gan = `*📖 Descripción:*
 
-> ${tiktokData.data.title}*
+> ${tiktokData.data.title}
 ╭───❝⭒⭒⭒⭒⭒⭒⭒⭒⭒⭒⭒⭒❞───
 ┊ ✧ _Likes:_ ${tiktokData.data.digg_count}
 ┊ ✧ _Comentarios:_ ${tiktokData.data.comment_count}
@@ -35,7 +35,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
 ⭑ ${tiktokData.data.music}`;
 
         if (videoURL || videoURLWatermark) {  
-            await conn.sendFile(m.chat, videoURL, "tiktok.mp4", "*\`¡DESCARGANDO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`, null, m);  
+            await conn.sendFile(m.chat, videoURL, "tiktok.mp4", "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`, null, m);  
             setTimeout(async () => {  
                 await conn.sendFile(m.chat, `${tiktokData.data.music}`, "lagutt.mp3", "", m);  
             }, 1500);  
