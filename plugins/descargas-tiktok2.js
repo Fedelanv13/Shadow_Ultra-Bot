@@ -34,11 +34,24 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
 🎧 *Sonido:*  
 ⭑ ${tiktokData.data.music}`;
 
+        const button = [
+            {
+                buttonId: `${usedPrefix}tiktokmp3 ${args[0]}`, // Este es el comando para descargar el audio
+                buttonText: { displayText: 'Enviar Audio' },
+                type: 1
+            }
+        ];
+
+        const buttonMessage = {
+            text: "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`,
+            footer: '¡Haz clic en el botón para obtener el audio!',
+            buttons: button,
+            headerType: 1
+        };
+
         if (videoURL || videoURLWatermark) {  
             await conn.sendFile(m.chat, videoURL, "tiktok.mp4", "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`, null, m);  
-            setTimeout(async () => {  
-                await conn.sendFile(m.chat, `${tiktokData.data.music}`, "lagutt.mp3", "", m);  
-            }, 1500);  
+            await conn.sendMessage(m.chat, buttonMessage, { quoted: m });
         } else {  
             throw m.reply("*No se pudo descargar el video.*");  
         }  
