@@ -65,7 +65,7 @@ let handler = async (m, { conn, text }) => {
   }
 };
 
-handler.customPrefix = /m|M|m/i;
+handler.customPrefix = /m|@|./i;
 handler.command = ['usica' 'usic'];
 handler.help = ['play'];
 handler.tags = ['play'];
