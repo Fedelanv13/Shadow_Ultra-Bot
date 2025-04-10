@@ -4,7 +4,7 @@ let handler = async(m, { conn, args, text }) => {
 
 if (!text) return m.reply(' Ingrese Un Link De YouTube\n');
 
-m.react(rwait);
+m.react("👻");
 
 let video;
 try {
