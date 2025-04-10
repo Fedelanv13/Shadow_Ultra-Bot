@@ -43,16 +43,27 @@ let handler = async (m, { conn, text }) => {
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
 
-    // Enviar el audio inmediatamente después de obtener la URL de descarga
-    const audioMessage = {
-      audio: { url: apiData.download.url },
-      mimetype: "audio/mpeg",
-      ptt: false,
-      fileName: `${video.title}.mp3`,
+    // Extraer la información de la música
+    const { name, albumname, artist, url, thumb, duration, download } = apiData;
+
+    const doc = {
+      audio: { url: download },
+      mimetype: 'audio/mp4',
+      fileName: `${name}.mp3`,
+      contextInfo: {
+        externalAdReply: {
+          showAdAttribution: true,
+          mediaType: 2,
+          mediaUrl: url,
+          title: name,
+          sourceUrl: url,
+          thumbnail: await (await conn.getFile(thumb)).data
+        }
+      }
     };
 
-    // Enviar el audio
-    await conn.sendMessage(m.chat, audioMessage, { quoted: m });
+    // Enviar el audio inmediatamente después de obtener la URL de descarga
+    await conn.sendMessage(m.chat, doc, { quoted: m });
 
     // Reacción de éxito
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
@@ -66,7 +77,7 @@ let handler = async (m, { conn, text }) => {
 };
 
 handler.customPrefix = /au|A|m/i;
-handler.command = ['dio', 'udio', 'usica' 'usic'];
+handler.command = ['dio', 'udio', 'usica', 'usic'];
 handler.help = ['play'];
 handler.tags = ['play'];
 
