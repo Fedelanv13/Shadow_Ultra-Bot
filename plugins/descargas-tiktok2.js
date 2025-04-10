@@ -34,30 +34,25 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
 🎧 *Sonido:*  
 ⭑ ${tiktokData.data.music}`;
 
-        const button = [
+        const buttons = [
             {
                 buttonId: `${usedPrefix}tiktokmp3 ${args[0]}`, // Este es el comando para descargar el audio
-                buttonText: { displayText: 'Enviar Audio' },
+                buttonText: { displayText: "Enviar Audio" },
                 type: 1
             }
         ];
 
-        const buttonMessage = {
-            text: "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`,
-            footer: '¡Haz clic en el botón para obtener el audio!',
-            buttons: button,
-            headerType: 1
-        };
-
         if (videoURL || videoURLWatermark) {  
-            // Enviar video y el botón en un solo mensaje
-            await conn.sendMessage(m.chat, {
-                video: { url: videoURL || videoURLWatermark },
-                caption: "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`,
-                footer: '¡Haz clic en el botón para obtener el audio!',
-                buttons: button,
-                headerType: 1
-            }, { quoted: m });
+            await conn.sendMessage(
+                m.chat,
+                {
+                    video: { url: videoURL || videoURLWatermark },
+                    caption: "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`,
+                    buttons: buttons,
+                    viewOnce: true
+                },
+                { quoted: m }
+            );
         } else {  
             throw m.reply("*No se pudo descargar el video.*");  
         }  
