@@ -7,7 +7,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
         return conn.reply(m.chat, `[ ℹ️ ] ¡Por favor ingresa un título de YouTube para buscar!\n\nEjemplo: *Corazón Serrano - Mix Poco Yo*`, m);
     }
 
-    await m.react('🕓');  // Muestra el reloj de carga
+    await m.react('📓');  // Muestra el reloj de carga
 
     try {
         const searchResults = await searchVideos(args.join(" "));
@@ -70,12 +70,12 @@ async function searchVideos(query) {
 
 // Función para formatear el texto del mensaje con los detalles del video
 function formatMessageText(video) {
-    let messageText = `*🔍 Resultado de búsqueda para:* \`${video.title}\`\n\n`;
+    let messageText = `*🍌 Resultado de búsqueda para:* \`${video.title}\`\n\n`;
     messageText += `*⌛ Duración:* ${video.duration || 'No disponible'}\n`;
-    messageText += `*👤 Canal:* ${video.channel || 'Desconocido'}\n`;
-    messageText += `*📅 Publicado:* ${convertTimeToSpanish(video.published)}\n`;
+    messageText += `*📓 Canal:* ${video.channel || 'Desconocido'}\n`;
+    messageText += `*📓 Publicado:* ${convertTimeToSpanish(video.published)}\n`;
     messageText += `*👁️ Vistas:* ${video.views || 'No disponible'}\n`;
-    messageText += `*🔗 Enlace al video:* [Ver Video](${video.url})\n`;
+    messageText += `*🔗 Enlace al video:* _[Ver Video Link:_ ${video.url}\n`;
     return messageText;
 }
 
@@ -84,12 +84,12 @@ function generateButtons(video, usedPrefix) {
     return [
         {
             buttonId: `${usedPrefix}ytmp3 ${video.url}`,
-            buttonText: { displayText: '🔊 Descargar Audio' },
+            buttonText: { displayText: '🔊 ```Descargar Audio```' },
             type: 1
         },
         {
             buttonId: `${usedPrefix}play2 ${video.url}`,
-            buttonText: { displayText: '📹 Descargar Vídeo' },
+            buttonText: { displayText: '📹 ```Descargar Vídeo```' },
             type: 1
         }
     ];
