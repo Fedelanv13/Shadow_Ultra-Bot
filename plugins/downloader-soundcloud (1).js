@@ -51,7 +51,14 @@ let handler = async (m, { conn, text }) => {
 
     if (!download) throw new Error("No se encontró la URL de descarga.");
 
-    // Creamos el objeto del mensaje para enviar, usando la URL de la miniatura directamente
+    // Validamos si la miniatura (thumb) es una URL válida
+    let thumbnailUrl = thumb;
+    if (typeof thumb !== 'string') {
+      console.log("El valor de 'thumb' no es una URL válida. Usando una miniatura predeterminada.");
+      thumbnailUrl = "https://via.placeholder.com/150"; // URL predeterminada si no es válida
+    }
+
+    // Creamos el objeto del mensaje para enviar, usando la URL de la miniatura validada
     const doc = {
       audio: { url: download },
       mimetype: 'audio/mp4',
@@ -63,7 +70,7 @@ let handler = async (m, { conn, text }) => {
           mediaUrl: url,
           title: name,
           sourceUrl: url,
-          thumbnail: thumb // Usamos la URL de la miniatura directamente aquí
+          thumbnail: thumbnailUrl // Usamos la URL de la miniatura validada
         }
       }
     };
