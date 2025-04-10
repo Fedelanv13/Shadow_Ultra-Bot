@@ -34,9 +34,9 @@ if (!args[0].match(/(https?:\/\/)?(www\.)?(vm\.|vt\.)?tiktok\.com\//)) {
     }
 };
 
-handler.help = ['tiktok']
+handler.help = ['tiktok2']
 handler.tags = ['descargas']
-handler.command = /^(tt|tiktok)$/i;
+handler.command = /^(tt2|tiktok2)$/i;
 handler.before = async (m, { conn }) => {
     let text = m.text?.toLowerCase()?.trim();
     if (text === 'tt' || text === 'tiktok') {
