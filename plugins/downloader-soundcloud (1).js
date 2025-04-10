@@ -58,6 +58,21 @@ let handler = async (m, { conn, text }) => {
       thumbnailUrl = "https://via.placeholder.com/150"; // URL predeterminada si no es válida
     }
 
+    // Verificamos que thumbnailUrl sea una URL válida
+    const isValidUrl = (url) => {
+      try {
+        new URL(url);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    };
+
+    if (!isValidUrl(thumbnailUrl)) {
+      console.log("La miniatura no es una URL válida. Usando miniatura predeterminada.");
+      thumbnailUrl = "https://via.placeholder.com/150"; // Miniatura predeterminada
+    }
+
     // Creamos el objeto del mensaje para enviar, usando la URL de la miniatura validada
     const doc = {
       audio: { url: download },
