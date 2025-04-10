@@ -7,19 +7,13 @@ const handler = async (m, { conn, args, usedPrefix }) => {
     return conn.reply(m.chat, '[ ℹ️ ] ¡Por favor ingresa un título de YouTube para buscar!\n\nEjemplo: *Corazón Serrano - Mix Poco Yo*', m);
   }
 
-  await m.react('📓'); // Ícono de carga
+  await m.react('📓'); // Reacción de espera
 
-  // Mensaje de espera actualizado
+  // Enviar TTS como mensaje de voz
   await conn.sendMessage(m.chat, {
-    text: `
-╭━〔 *𝚈𝙾𝚄𝚃𝚄𝙱𝙴 𝙱𝚄𝚂𝚀𝚄𝙴𝙳𝙰* 〕━╮
-┃ 🔎 Realizando la búsqueda...
-┃ ⌛ En un momento te daremos el resultado.
-┃ 
-┃ 👻 Solo... ten paciencia estimado.
-╰━━━━━━━━━━━━━━━━━━━━━╯`,
-    quoted: m
-  });
+    text: 'Un momento por favor, estamos buscando tu video.',
+    tts: true
+  }, { quoted: m });
 
   try {
     const searchResults = await searchVideos(args.join(" "));
