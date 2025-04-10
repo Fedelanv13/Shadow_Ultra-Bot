@@ -1,5 +1,6 @@
-import { WAMessageStubType } from '@whiskeysockets/baileys'
-import fetch from 'node-fetch'
+import { WAMessageStubType } from '@whiskeysockets/baileys';
+import fetch from 'node-fetch';
+import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysockets/baileys';
 
 export async function before(m, { conn, participants, groupMetadata }) {
   if (!m.messageStubType || !m.isGroup) return;
@@ -15,15 +16,20 @@ export async function before(m, { conn, participants, groupMetadata }) {
 
   let img;
   try {
-    let pp = await conn.profilePictureUrl(who, 'image');
+    const pp = await conn.profilePictureUrl(who, 'image');
     img = await (await fetch(pp)).buffer();
   } catch {
     img = await (await fetch(defaultImage)).buffer();
   }
 
   const fkontak = {
-    key: { fromMe: false, participant: "0@s.whatsapp.net", remoteJid: "status@broadcast" },
-    message: { contactMessage: { displayName: "Bot", vcard: "BEGIN:VCARD\nVERSION:3.0\nFN:Bot\nEND:VCARD" }}
+    key: { fromMe: false, participant: '0@s.whatsapp.net', remoteJid: 'status@broadcast' },
+    message: {
+      contactMessage: {
+        displayName: 'Bot',
+        vcard: 'BEGIN:VCARD\nVERSION:3.0\nFN:Bot\nEND:VCARD'
+      }
+    }
   };
 
   let caption = '';
@@ -36,13 +42,29 @@ export async function before(m, { conn, participants, groupMetadata }) {
     caption = `╭─────────────╮\n  *ADIÓS, GUERRERO*\n╰─────────────╯\n\n${taguser} ha dejado el grupo.\n\n✨ Siempre recordaremos tus memes (o no).\n¡Que la fuerza te acompañe fuera de *${groupMetadata.subject}*!\n\n༄ ── 「 Powered by Moon Force Team 」`;
   } else return;
 
-  await conn.sendMessage(m.chat, {
+  const message = await prepareWAMessageMedia({
     image: img,
     caption: caption,
-    mentions: [who],
     footer: 'Moon Force Team',
-    templateButtons: [
-      { index: 1, quickReplyButton: { displayText: '📜 Menú', id: '.menu' } }
-    ]
+  }, { upload: conn.waUploadToServer });
+
+  const buttons = [
+    {
+      buttonId: '.menu',
+      buttonText: { displayText: '📜 Menú' },
+      type: 1
+    }
+  ];
+
+  const templateMessage = generateWAMessageFromContent(m.chat, {
+    templateMessage: {
+      hydratedTemplate: {
+        imageMessage: message.imageMessage,
+        hydratedFooterText: 'Moon Force Team',
+        hydratedButtons: buttons
+      }
+    }
   }, { quoted: fkontak });
+
+  await conn.relayWAMessage(templateMessage);
 }
