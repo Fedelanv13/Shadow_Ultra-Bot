@@ -198,7 +198,7 @@ const handler = async (m, { conn, args, command }) => {
 
     const { title, download, type, thumbnail, quality, duration } = res.result;
 
-    const caption = `🎬 *${title}*\n📥 *Formato:* ${type} ${quality}p\n⏱ *Duración:* ${duration}`;
+    const caption = `🎬 *${title}*\n📥 *Formato:* ${type} | ${quality}p\n⏱ *Duración:* ${duration}`;
 
     if (type === 'video') {
       await conn.sendMessage(m.chat, {
@@ -212,7 +212,7 @@ const handler = async (m, { conn, args, command }) => {
         audio: { url: download },
         caption,
         mimetype: 'audio/mpeg',
-        ptt: true,
+        ptt: false,
         fileName: `${title}.mp3`
       }, { quoted: m });
     }
