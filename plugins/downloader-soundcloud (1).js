@@ -43,36 +43,32 @@ let handler = async (m, { conn, text }) => {
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
 
-    // Comprobamos que apiData tenga los datos necesarios
-    const { download } = apiData;
-
-    if (!download) throw new Error("No se encontró la URL de descarga.");
-
-    // Creamos el objeto del mensaje solo con el archivo de audio
+    // Enviar el audio inmediatamente después de obtener la URL de descarga
     const audioMessage = {
-      audio: { url: download },
-      mimetype: 'audio/mp4',
+      audio: { url: apiData.download.url },
+      mimetype: "audio/mpeg",
+      opus: true,
       fileName: `${video.title}.mp3`,
     };
 
-    // Enviar el mensaje de audio
+    // Enviar el audio
     await conn.sendMessage(m.chat, audioMessage, { quoted: m });
 
     // Reacción de éxito
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (error) {
-    console.error("Error al procesar el mensaje:", error);
+    console.error("Error:", error);
 
-    // Enviar un mensaje de error y reacción
+    // Reacción de error si algo falla
     await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
-    await conn.reply(m.chat, `Ocurrió un error: ${error.message}`, m);
   }
 };
 
 handler.customPrefix = /au|A|m/i;
-handler.command = ['dio', 'udio', 'usica', 'usic'];
+handler.command = ['dio', 'udio', 'usica' 'usic'];
 handler.help = ['play'];
 handler.tags = ['play'];
 
 export default handler;
+  
