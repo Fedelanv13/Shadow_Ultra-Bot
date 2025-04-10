@@ -185,7 +185,7 @@ m.reply(`*${name} - ${artist}* (${duration})\n\n${url}\n\n> *[ ℹ️ ]* sᥱ �
 }
 handler.help = ['aplay'];
 handler.tags = ['descargas'];
-handler.command = /^(aplay|applemusic|applemusicplay)$/i;
+handler.command = /^(aplay2|applemusic2|applemusicplay2)$/i;
 handler.register = true;
 
 export default handler;
