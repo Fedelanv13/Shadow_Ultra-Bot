@@ -70,7 +70,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 };
 
 handler.tags = ['descargas'];
-handler.command = ['ytmp4'];
+handler.command = ['ytmp'];
 handler.register = true;
 
 export default handler;
