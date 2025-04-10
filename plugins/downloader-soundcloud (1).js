@@ -26,12 +26,13 @@ const fetchWithRetries = async (url, maxRetries = 2) => {
 // Handler principal
 let handler = async (m, { conn, text }) => {
   if (!text || !text.trim()) {
-    return conn.reply(m.chat, '*[ ℹ️ ] Ingresa el name de una rola.*\n\n*[ 💡 ] Ejemplo:* Tren al sur', m);
+    await conn.sendMessage(m.chat, { react: { text: "❓", key: m.key } });
+    return conn.reply(m.chat, '*[ ℹ️ ] Ingresa el nombre de una rola.*\n\n*[ 💡 ] Ejemplo:* Tren al sur', m);
   }
 
   try {
-    // Enviar un mensaje de espera inicial
-    await conn.sendMessage(m.chat, { text: "", react: { text: "😜", key: m.key } });
+    // Reacción inicial indicando que está en proceso
+    await conn.sendMessage(m.chat, { react: { text: "🕒", key: m.key } });
 
     // Buscar en YouTube de forma asincrónica
     const searchResults = await yts(text.trim());
@@ -53,15 +54,14 @@ let handler = async (m, { conn, text }) => {
     // Enviar el audio
     await conn.sendMessage(m.chat, audioMessage, { quoted: m });
 
-    // Reaccionar con una confirmación profesional
+    // Reacción de éxito
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (error) {
     console.error("Error:", error);
 
-    // Reaccionar con un error profesional si algo falla
+    // Reacción de error si algo falla
     await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
-    conn.reply(m.chat, '*`Error al procesar tu solicitud.`*', m);
   }
 };
 
