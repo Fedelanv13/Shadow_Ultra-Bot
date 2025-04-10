@@ -65,6 +65,6 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
 handler.help = ['tiktoksearch'];
 handler.tags = ['buscador'];
 handler.customPrefix = /t|@|./i;
-handler.command = ['tiktoksearch', 'ttss', 'ttsearch', 'tss', 'tsearch', 'iktoksearch'];
+handler.command = ['tiktoksearch2', 'ttss2', 'ttsearch2', 'tss2', 'tsearch2', 'iktoksearch2'];
 
 export default handler;
