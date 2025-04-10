@@ -50,16 +50,14 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
         };
 
         if (videoURL || videoURLWatermark) {  
-            // Enviar video y botón juntos en un solo mensaje
+            // Enviar video y el botón en un solo mensaje
             await conn.sendMessage(m.chat, {
-                text: "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`,
+                video: { url: videoURL || videoURLWatermark },
+                caption: "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`,
                 footer: '¡Haz clic en el botón para obtener el audio!',
                 buttons: button,
-                headerType: 1,
-                video: { url: videoURL || videoURLWatermark }, // Enviar video
-                mimetype: 'video/mp4',
-                fileName: 'tiktok.mp4'
-            }, { quoted: m });  
+                headerType: 1
+            }, { quoted: m });
         } else {  
             throw m.reply("*No se pudo descargar el video.*");  
         }  
