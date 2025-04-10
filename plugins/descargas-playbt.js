@@ -1,5 +1,8 @@
 import yts from 'yt-search';
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
+import gTTS from 'gtts';
 import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysockets/baileys';
 
 const handler = async (m, { conn, args, usedPrefix }) => {
@@ -9,11 +12,26 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
   await m.react('📓'); // Reacción de espera
 
-  // Enviar TTS como mensaje de voz
-  await conn.sendMessage(m.chat, {
-    text: 'Un momento por favor, estamos buscando tu video.',
-    tts: true
-  }, { quoted: m });
+  // Generar TTS como PTT
+  const tempAudioPath = './temp-tts.mp3';
+  const ttsMessage = 'Un momento por favor, estamos buscando tu video.';
+  const gtts = new gTTS(ttsMessage, 'es');
+
+  gtts.save(tempAudioPath, async function (err) {
+    if (err) {
+      console.error('Error al generar TTS:', err);
+    } else {
+      const audioBuffer = fs.readFileSync(tempAudioPath);
+
+      await conn.sendMessage(m.chat, {
+        audio: audioBuffer,
+        mimetype: 'audio/mp4',
+        ptt: true
+      }, { quoted: m });
+
+      fs.unlinkSync(tempAudioPath); // Eliminar el archivo temporal
+    }
+  });
 
   try {
     const searchResults = await searchVideos(args.join(" "));
@@ -55,7 +73,7 @@ handler.command = ['play'];
 
 export default handler;
 
-// Función para realizar la búsqueda de videos en YouTube
+// Función para buscar videos en YouTube
 async function searchVideos(query) {
   try {
     const res = await yts(query);
@@ -74,18 +92,18 @@ async function searchVideos(query) {
   }
 }
 
-// Función para formatear el texto del mensaje con los detalles del video
+// Formatea el mensaje con los detalles del video
 function formatMessageText(video) {
   let messageText = `*🍌 ɾҽʂυʅƚαԃσ ԃҽ Ⴆύʂϙυҽԃα ραɾα:* ${video.title}\n\n`;
   messageText += `⌛ 𝙳𝚞𝚛𝚊𝚌𝚒𝚘́𝚗: ${video.duration || 'No disponible'}\n`;
   messageText += `📺 𝙲𝚊𝚗𝚊𝚕: ${video.channel || 'Desconocido'}\n`;
   messageText += `📅 𝙿𝚞𝚋𝚕𝚒𝚌𝚊𝚍𝚘: ${convertTimeToSpanish(video.published)}\n`;
   messageText += `👁️ 𝚅𝚒𝚜𝚝𝚊𝚜: ${video.views || 'No disponible'}\n`;
-  messageText += `🔗 𝙴𝚗𝚕𝚊𝚌𝚎: ${video.url}\n`; // Siempre muestra el link
+  messageText += `🔗 𝙴𝚗𝚕𝚊𝚌𝚎: ${video.url}\n`;
   return messageText;
 }
 
-// Función para generar los botones de interacción
+// Botones de descarga
 function generateButtons(video, usedPrefix) {
   return [
     {
@@ -101,7 +119,7 @@ function generateButtons(video, usedPrefix) {
   ];
 }
 
-// Función para convertir el tiempo de publicación a español
+// Traducción de tiempos
 function convertTimeToSpanish(timeText) {
   return timeText
     .replace(/year/, 'año')
