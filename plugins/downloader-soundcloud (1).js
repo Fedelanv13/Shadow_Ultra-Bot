@@ -51,16 +51,7 @@ let handler = async (m, { conn, text }) => {
 
     if (!download) throw new Error("No se encontró la URL de descarga.");
 
-    // Intentamos obtener el archivo de la miniatura
-    const thumbData = await conn.getFile(thumb);
-    if (!thumbData || !thumbData.data) {
-      throw new Error("No se pudo obtener la miniatura.");
-    }
-
-    // Asegurándonos de pasar el URL de la miniatura correctamente
-    const thumbnailUrl = thumbData?.data instanceof Buffer ? thumbData.data : thumbData?.url;
-
-    // Creamos el objeto del mensaje para enviar
+    // Creamos el objeto del mensaje para enviar, usando la URL de la miniatura directamente
     const doc = {
       audio: { url: download },
       mimetype: 'audio/mp4',
@@ -72,7 +63,7 @@ let handler = async (m, { conn, text }) => {
           mediaUrl: url,
           title: name,
           sourceUrl: url,
-          thumbnail: thumbnailUrl // Aquí pasamos el URL de la miniatura
+          thumbnail: thumb // Usamos la URL de la miniatura directamente aquí
         }
       }
     };
