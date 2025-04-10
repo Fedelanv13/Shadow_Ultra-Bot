@@ -1,4 +1,3 @@
-
 import fetch from 'node-fetch'
 
 var handler = async (m, { conn, args, usedPrefix, command }) => {
@@ -51,9 +50,16 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
         };
 
         if (videoURL || videoURLWatermark) {  
-            await conn.sendFile(m.chat, videoURL, "tiktok.mp4", "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`, null, m);  
-            // Enviar el mensaje con el botón junto al video
-            await conn.sendMessage(m.chat, buttonMessage, { quoted: m });
+            // Enviar video y botón juntos en un solo mensaje
+            await conn.sendMessage(m.chat, {
+                text: "*\`¡DESCARGADO DESDE TIKTOK!\`*" + `\n\n${infonya_gan}`,
+                footer: '¡Haz clic en el botón para obtener el audio!',
+                buttons: button,
+                headerType: 1,
+                video: { url: videoURL || videoURLWatermark }, // Enviar video
+                mimetype: 'video/mp4',
+                fileName: 'tiktok.mp4'
+            }, { quoted: m });  
         } else {  
             throw m.reply("*No se pudo descargar el video.*");  
         }  
