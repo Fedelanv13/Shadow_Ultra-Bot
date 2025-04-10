@@ -26,33 +26,23 @@ export async function before(m, { conn, participants, groupMetadata }) {
     message: { contactMessage: { displayName: "Bot", vcard: "BEGIN:VCARD\nVERSION:3.0\nFN:Bot\nEND:VCARD" }}
   };
 
+  let caption = '';
   if (m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD) {
-    const bienvenida = `╭─────────────╮\n  *¡NUEVO INTEGRANTE!*\n╰─────────────╯\n\n🌟 Bienvenido/a ${taguser}\n📍 Grupo: *${groupMetadata.subject}*\n\nEsperamos que la pases bien, comparte buena vibra y sé parte de esta pequeña gran familia.\n\n༄ ── 「 Powered by Moon Force Team 」`;
-
-    await conn.sendMessage(m.chat, {
-      image: img,
-      caption: bienvenida,
-      mentions: [who],
-      buttons: [
-        { buttonId: '.menu', buttonText: { displayText: '📜 Menú' }, type: 1 }
-      ]
-    }, { quoted: fkontak });
-
+    caption = `╭─────────────╮\n  *¡NUEVO INTEGRANTE!*\n╰─────────────╯\n\n🌟 Bienvenido/a ${taguser}\n📍 Grupo: *${groupMetadata.subject}*\n\nEsperamos que la pases bien, comparte buena vibra y sé parte de esta pequeña gran familia.\n\n༄ ── 「 Powered by Moon Force Team 」`;
   } else if (
     m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_REMOVE || 
     m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_LEAVE
   ) {
-    const bye = `╭─────────────╮\n  *ADIÓS, GUERRERO*\n╰─────────────╯\n\n${taguser} ha dejado el grupo.\n\n✨ Siempre recordaremos tus memes (o no).\n¡Que la fuerza te acompañe fuera de *${groupMetadata.subject}*!\n\n༄ ── 「 Powered by Moon Force Team 」`;
+    caption = `╭─────────────╮\n  *ADIÓS, GUERRERO*\n╰─────────────╯\n\n${taguser} ha dejado el grupo.\n\n✨ Siempre recordaremos tus memes (o no).\n¡Que la fuerza te acompañe fuera de *${groupMetadata.subject}*!\n\n༄ ── 「 Powered by Moon Force Team 」`;
+  } else return;
 
-    await conn.sendMessage(m.chat, {
-      image: img,
-      caption: bye,
-      mentions: [who],
-      buttons: [
-        { buttonId: '.menu', buttonText: { displayText: '📜 Menú' }, type: 1 }
-      ]
-    }, { quoted: fkontak });
-  }
-
-  return true;
+  await conn.sendMessage(m.chat, {
+    image: img,
+    caption: caption,
+    mentions: [who],
+    footer: 'Moon Force Team',
+    templateButtons: [
+      { index: 1, quickReplyButton: { displayText: '📜 Menú', id: '.menu' } }
+    ]
+  }, { quoted: fkontak });
 }
