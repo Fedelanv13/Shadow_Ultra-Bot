@@ -24,13 +24,11 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
     const messageText = formatMessageText(video);
 
-    // Mezclar sugerencias aleatorias
-    const shuffledSuggestions = shuffleArray(searchResults.slice(1)).slice(0, 5);
-    const relatedVideos = shuffledSuggestions
-      .map((v, i) => `   ${i + 1}. ✰ ${fancyText(v.title)}`)
-      .join('\n');
+    // Sugerencias relacionadas (solo 3)
+    const shuffledSuggestions = shuffleArray(searchResults.slice(1)).slice(0, 3);
+    const relatedVideos = shuffledSuggestions.map((v, i) => `   ${i + 1}. ✰ ${v.title}`).join('\n');
 
-    // Tendencias aleatorias
+    // Tendencias aleatorias (3)
     const tendencias = shuffleArray([
       '🎤 Peso Pluma - La Durango',
       '🎶 Bad Bunny - Oasis 2',
@@ -42,11 +40,11 @@ const handler = async (m, { conn, args, usedPrefix }) => {
       '🌍 J Balvin - Mundo Real',
       '🌀 Trueno - La Resistencia',
       '🚀 Quevedo - El Último Rayo'
-    ]).slice(0, 3).map((t, i) => `   ${i + 1}. ✰ ${fancyText(t)}`).join('\n');
+    ]).slice(0, 3).join('\n');
 
     const fullMessage = `╭─〘 𝙍𝙀𝙎𝙐𝙇𝙏𝘼𝘿𝙊 𝙀𝙉𝘾𝙊𝙉𝙏𝙍𝘼𝘿𝙊 〙─╮\n${messageText}\n╰────────────────────╯\n\n` +
                         `╭───⊷ *🔎 Sugerencias Relacionadas:*\n${relatedVideos}\n╰──────────────╯\n\n` +
-                        `╭───⊷ *🎶 Tendencias 𝟐𝟎𝟐𝟓:*\n${tendencias}\n╰──────────────╯`;
+                        `╭───⊷ *🌟 Tendencias 𝟐𝟎𝟐𝟓:*\n${tendencias}\n╰──────────────╯`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
@@ -140,20 +138,4 @@ function convertTimeToSpanish(timeText) {
 // Array aleatorio
 function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
-}
-
-// Fancy font para sugerencias/tendencias
-const fancyAlphabet = {
-  a: 'ᥲ', b: 'ᑲ', c: 'ᥴ', d: 'ძ', e: 'ᥱ', f: '𝖿', g: 'ց', h: 'һ',
-  i: 'і', j: 'ȷ', k: 'ƙ', l: 'ᥣ', m: '𝖒', n: 'ᥙ', o: '𝖔', p: 'ρ',
-  q: '𝗊', r: '𝗋', s: '𝗌', t: '𝗍', u: '𝗎', v: '𝗏', w: '𝗐', x: '𝗑',
-  y: '𝗒', z: '𝗓',
-  A: 'ᗩ', B: 'ᗷ', C: 'ᑕ', D: 'ᗪ', E: 'ᕮ', F: 'ᖴ', G: 'ᘜ', H: 'ᕼ',
-  I: 'ᘐ', J: 'ᒍ', K: 'K', L: 'ᒪ', M: 'ᗰ', N: 'ᑎ', O: 'O', P: 'ᑭ',
-  Q: 'ᑫ', R: 'ᖇ', S: 'ᔕ', T: 'T', U: 'ᑌ', V: 'ᐯ', W: 'ᗯ', X: '᙭',
-  Y: 'Y', Z: 'ᘔ'
-};
-
-function fancyText(text) {
-  return text.split('').map(c => fancyAlphabet[c] || c).join('');
 }
