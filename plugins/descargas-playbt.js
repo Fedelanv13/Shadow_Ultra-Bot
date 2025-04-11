@@ -43,8 +43,8 @@ const handler = async (m, { conn, args, usedPrefix }) => {
     ]).slice(0, 3).map(song => `⭑ ${fancyText(song)}`).join('\n');
 
     const fullMessage = `╭─〘 𝙍𝙀𝙎𝙐𝙇𝙏𝘼𝘿𝙊 𝙀𝙉𝘾𝙊𝙉𝙏𝙍𝘼𝘿𝙊 〙─╮\n${messageText}\n╰────────────────────╯\n\n` +
-                        `╭───⊷ *𖥔 Sᴜɢᴇʀᴇɴᴄɪᴀs ʀᴇʟᴀᴄɪᴏɴᴀᴅᴀs:*\n${relatedVideos}\n╰──────────────╯\n\n` +
-                        `╭───⊷ *𖥔 Tᴇɴᴅᴇɴᴄɪᴀs 𝟐𝟎𝟐𝟓:*\n${tendencias}\n╰──────────────╯`;
+                        `╭───⊷ *🔎 Sugerencias Relacionadas:*\n${relatedVideos}\n╰──────────────╯\n\n` +
+                        `╭───⊷ *🎶 Tendencias 𝟐𝟎𝟐𝟓:*\n${tendencias}\n╰──────────────╯`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
@@ -140,13 +140,12 @@ function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
 }
 
-// Fuente decorativa estilo fancy
+// Fuente estilizada (aplicando la fuente que me indicaste)
 function fancyText(str) {
+  const fancyFont = 'ᥲᑲᥴძᥱ𝖿gһіȷkᥣm';
   const normal = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const fancy =  '𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏' +
-                 '𝒜𝐵𝒞𝒟𝐸𝐹𝒢𝐻𝐼𝒥𝒦𝐿𝑀𝒩𝒪𝒫𝒬𝑅𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵';
   return [...str].map(c => {
     const index = normal.indexOf(c);
-    return index >= 0 ? fancy[index] : c;
+    return index >= 0 ? fancyFont[index] : c;
   }).join('');
-                                 }
+}
