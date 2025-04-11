@@ -46,10 +46,40 @@ const handler = async (m, { conn, args, usedPrefix }) => {
     }, { quoted: m });
 
     // Sistema de logros:
-    if (!global.db.data.users[m.sender].hasSearched) {
-      global.db.data.users[m.sender].hasSearched = true;
-      conn.reply(m.chat, '🏆 ¡Felicidades! Has desbloqueado el logro "Primer Búsqueda Realizada". Sigue buscando más para obtener más logros.', m);
+    const user = global.db.data.users[m.sender];
+    let achievedLogros = user.achievements || [];
+
+    // Logros por búsqueda
+    if (!user.hasSearched) {
+      user.hasSearched = true;
+      achievedLogros.push('🏆 Logro desbloqueado: Primera Búsqueda');
     }
+
+    // Logros por interacción con botones
+    if (!user.hasPressedButton) {
+      user.hasPressedButton = true;
+      achievedLogros.push('🎉 Logro desbloqueado: Primera Interacción con Botones');
+    }
+
+    // Logros por realizar ciertas actividades
+    const logrosExtra = [
+      '🔍 Logro desbloqueado: Buscar más de 3 videos',
+      '📂 Logro desbloqueado: Guardar tu primer video',
+      '🎥 Logro desbloqueado: Descargar tu primer video',
+      '🎧 Logro desbloqueado: Escuchar música más de 5 veces',
+      '🌍 Logro desbloqueado: Buscar música internacional'
+      // Aquí puedes seguir agregando logros personalizados.
+    ];
+
+    // Añadir estos logros al usuario
+    achievedLogros.push(...logrosExtra);
+
+    // Actualiza los logros
+    user.achievements = achievedLogros;
+
+    // Enviar los logros al usuario
+    const achievementsMessage = `🎉 ¡Felicidades! Has desbloqueado los siguientes logros:\n\n${achievedLogros.join('\n')}`;
+    conn.reply(m.chat, achievementsMessage, m);
 
     await m.react('✅');  // Reacción de éxito
 
