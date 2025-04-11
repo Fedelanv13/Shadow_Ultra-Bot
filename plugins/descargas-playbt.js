@@ -24,27 +24,12 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
     const messageText = formatMessageText(video);
 
-    // Sugerencias relacionadas (solo 3)
-    const shuffledSuggestions = shuffleArray(searchResults.slice(1)).slice(0, 3);
-    const relatedVideos = shuffledSuggestions.map((v, i) => `   ${i + 1}. ✰ ${v.title}`).join('\n');
-
-    // Tendencias aleatorias (3)
-    const tendencias = shuffleArray([
-      '🎤 Peso Pluma - La Durango',
-      '🎶 Bad Bunny - Oasis 2',
-      '🌕 Karol G - Luna Llena',
-      '🔥 Feid - Fumeteo 3000',
-      '⚡ Rauw Alejandro - Eclipse',
-      '🎧 Bizarrap Music Sessions #63',
-      '⭐ Young Miko - Alienígena',
-      '🌍 J Balvin - Mundo Real',
-      '🌀 Trueno - La Resistencia',
-      '🚀 Quevedo - El Último Rayo'
-    ]).slice(0, 3).join('\n');
+    // Elegir 3 sugerencias aleatorias del resto de resultados
+    const randomSuggestions = shuffleArray(searchResults.slice(1)).slice(0, 3);
+    const sugerencias = randomSuggestions.map((v, i) => `   ${i + 1}. ✰ ${v.title}`).join('\n');
 
     const fullMessage = `╭─〘 𝙍𝙀𝙎𝙐𝙇𝙏𝘼𝘿𝙊 𝙀𝙉𝘾𝙊𝙉𝙏𝙍𝘼𝘿𝙊 〙─╮\n${messageText}\n╰────────────────────╯\n\n` +
-                        `╭───⊷ *🔎 Sugerencias Relacionadas:*\n${relatedVideos}\n╰──────────────╯\n\n` +
-                        `╭───⊷ *🌟 Tendencias 𝟐𝟎𝟐𝟓:*\n${tendencias}\n╰──────────────╯`;
+                        `╭───⊷ *🔎 Sugerencias Relacionadas:*\n${sugerencias}\n╰──────────────╯`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
