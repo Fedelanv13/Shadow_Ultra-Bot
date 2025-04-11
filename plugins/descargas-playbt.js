@@ -7,7 +7,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
     return conn.reply(m.chat, '✏️ *Por favor ingresa un título de YouTube para buscar.*\nEjemplo:\n> *Corazón Serrano - Mix Poco Yo*', m);
   }
 
-  await m.react('🔍');  // Reacción de búsqueda
+  await m.react('🔍');
 
   await conn.sendMessage(m.chat, {
     text: '⌛ *Buscando en YouTube...*',
@@ -17,18 +17,32 @@ const handler = async (m, { conn, args, usedPrefix }) => {
   try {
     const searchResults = await searchVideos(args.join(" "));
 
-    if (!searchResults.length) {
-      throw new Error('No se encontraron resultados.');
-    }
+    if (!searchResults.length) throw new Error('No se encontraron resultados.');
 
     const video = searchResults[0];
     const thumbnail = await (await fetch(video.thumbnail)).buffer();
 
     const messageText = formatMessageText(video);
-    
-    // Sugerencias automáticas
-    const relatedVideos = searchResults.slice(1, 3).map((v, i) => `🎶 ${v.title}`).join('\n');
-    const messageWithSuggestions = `${messageText}\n\n🔍 *Sugerencias relacionadas:* \n${relatedVideos || 'No hay sugerencias.'}`;
+
+    // Mezclar sugerencias aleatoriamente
+    const shuffledSuggestions = shuffleArray(searchResults.slice(1)).slice(0, 5);
+    const relatedVideos = shuffledSuggestions.map(v => `🎶 ${v.title}`).join('\n');
+
+    // Tendencias 2025 aleatorias
+    const tendencias = shuffleArray([
+      'Peso Pluma - La Durango',
+      'Bad Bunny - Oasis 2',
+      'Karol G - Luna Llena',
+      'Feid - Fumeteo 3000',
+      'Rauw Alejandro - Eclipse',
+      'Bizarrap Music Sessions #63',
+      'Young Miko - Alienígena',
+      'J Balvin - Mundo Real',
+      'Trueno - La Resistencia',
+      'Quevedo - El Último Rayo'
+    ]).slice(0, 3).map(t => `✨ ${t}`).join('\n');
+
+    const messageWithSuggestions = `${messageText}\n\n🔍 *Sugerencias relacionadas:* \n${relatedVideos || 'No hay sugerencias.'}\n\n⭐ *Tendencias musicales 2025:*\n${tendencias}`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
@@ -44,11 +58,11 @@ const handler = async (m, { conn, args, usedPrefix }) => {
       viewOnce: true
     }, { quoted: m });
 
-    await m.react('✅');  // Reacción de éxito
+    await m.react('✅');
 
   } catch (e) {
     console.error(e);
-    await m.react('❌');  // Reacción de error
+    await m.react('❌');
     conn.reply(m.chat, '*❗ Ocurrió un error al buscar el video.*', m);
   }
 };
@@ -78,7 +92,7 @@ async function searchVideos(query) {
   }
 }
 
-// Formateo de mensaje
+// Función para formatear el mensaje principal
 function formatMessageText(video) {
   return `🎶 *RESULTADO ENCONTRADO*\n\n` +
          `*• Título:* ${video.title}\n` +
@@ -105,7 +119,7 @@ function generateButtons(video, usedPrefix) {
   ];
 }
 
-// Conversión de fechas a español
+// Conversión de tiempo a español
 function convertTimeToSpanish(timeText) {
   return timeText
     .replace(/year/, 'año')
@@ -118,4 +132,9 @@ function convertTimeToSpanish(timeText) {
     .replace(/hours/, 'horas')
     .replace(/minute/, 'minuto')
     .replace(/minutes/, 'minutos');
-      }
+}
+
+// Mezclar array aleatoriamente
+function shuffleArray(arr) {
+  return arr.sort(() => Math.random() - 0.5);
+}
