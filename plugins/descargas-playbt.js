@@ -1,6 +1,5 @@
 import yts from 'yt-search';
 import fetch from 'node-fetch';
-import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysockets/baileys';
 
 const handler = async (m, { conn, args, usedPrefix }) => {
   if (!args[0]) {
@@ -9,34 +8,64 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
   await m.react('📓'); // Reacción de espera
 
-  // Enviar TTS como mensaje de voz
+  // Enviar mensaje de espera con TTS
   await conn.sendMessage(m.chat, {
-  text: '❒ ∆ *¡Un momento, por favor!* ▶\n\n☑ *Estamos buscando tu video...* ✯',
-  tts: true
-}, { quoted: m });
+    text: '❒ ∆ *¡Un momento, por favor!* ▶\n\n☑ *Estamos buscando tu video...* ✯',
+    tts: true
+  }, { quoted: m });
 
   try {
     const searchResults = await searchVideos(args.join(" "));
-
     if (!searchResults.length) {
       throw new Error('No se encontraron resultados. Intenta con otro título.');
     }
 
     const video = searchResults[0];
     const thumbnail = await (await fetch(video.thumbnail)).buffer();
-
     const messageText = formatMessageText(video);
+
+    const sections = searchResults.map(video => ({
+      title: `🎬 ${video.title}`,
+      rows: [
+        {
+          header: 'Audio (MP3)',
+          title: '🎵 Descargar como Audio',
+          description: 'Calidad buena, formato MP3',
+          id: `${usedPrefix}ytmp3 ${video.url}`
+        },
+        {
+          header: 'Video (MP4)',
+          title: '🎥 Descargar como Video',
+          description: 'Calidad estándar, formato MP4',
+          id: `${usedPrefix}ytmp4 ${video.url}`
+        },
+        {
+          header: 'Audio Documento',
+          title: '🗂️ MP3 como Documento',
+          description: 'Ideal para reenviar sin compresión',
+          id: `${usedPrefix}ytmp3doc ${video.url}`
+        }
+      ]
+    }));
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
       caption: messageText,
-      footer: `✦ Codigo Editado por: Wirk ✦`,
+      footer: '✦ Codigo Editado por: Wirk ✦',
       contextInfo: {
         mentionedJid: [m.sender],
         forwardingScore: 999,
         isForwarded: true
       },
-      buttons: generateButtons(video, usedPrefix),
+      buttons: [
+        {
+          name: 'single_select',
+          buttonParamsJson: JSON.stringify({
+            title: '✨ Selecciona un formato de descarga:',
+            sections
+          })
+        }
+      ],
       headerType: 1,
       viewOnce: true
     }, { quoted: m });
@@ -55,7 +84,7 @@ handler.command = ['play'];
 
 export default handler;
 
-// Función para realizar la búsqueda de videos en YouTube
+// Buscar videos en YouTube
 async function searchVideos(query) {
   try {
     const res = await yts(query);
@@ -63,7 +92,7 @@ async function searchVideos(query) {
       title: video.title,
       url: video.url,
       thumbnail: video.thumbnail,
-      channel: video.author.name,
+      author: { name: video.author.name },
       published: video.timestamp || 'No disponible',
       views: video.views || 'No disponible',
       duration: video.duration.timestamp || 'No disponible'
@@ -74,34 +103,18 @@ async function searchVideos(query) {
   }
 }
 
-// Función para formatear el texto del mensaje con los detalles del video
+// Formatear mensaje principal
 function formatMessageText(video) {
-  let messageText = `*🍌 ɾҽʂυʅƚαԃσ ԃҽ Ⴆύʂϙυҽԃα ραɾα:* ${video.title}\n\n`;
-  messageText += `⌛ 𝙳𝚞𝚛𝚊𝚌𝚒𝚘́𝚗: ${video.duration || 'No disponible'}\n`;
-  messageText += `📺 𝙲𝚊𝚗𝚊𝚕: ${video.channel || 'Desconocido'}\n`;
-  messageText += `📅 𝙿𝚞𝚋𝚕𝚒𝚌𝚊𝚍𝚘: ${convertTimeToSpanish(video.published)}\n`;
-  messageText += `👁️ 𝚅𝚒𝚜𝚝𝚊𝚜: ${video.views || 'No disponible'}\n`;
-  messageText += `🔗 𝙴𝚗𝚕𝚊𝚌𝚎: ${video.url}\n`; // Siempre muestra el link
+  let messageText = `*🍌 Resultado de búsqueda para:* ${video.title}\n\n`;
+  messageText += `⌛ *Duración:* ${video.duration || 'No disponible'}\n`;
+  messageText += `📺 *Canal:* ${video.author.name || 'Desconocido'}\n`;
+  messageText += `📅 *Publicado:* ${convertTimeToSpanish(video.published)}\n`;
+  messageText += `👁️ *Vistas:* ${video.views || 'No disponible'}\n`;
+  messageText += `🔗 *Enlace:* ${video.url}\n`;
   return messageText;
 }
 
-// Función para generar los botones de interacción
-function generateButtons(video, usedPrefix) {
-  return [
-    {
-      buttonId: `${usedPrefix}ytmp3 ${video.url}`,
-      buttonText: { displayText: '🎶 ᑕᒪᏆᑕ ᑭᗩᖇᗩ ᗪᙓՏᑕᗩᖇǤᗩᖇ ᗩᑌᗪᏆᗝ' },
-      type: 1
-    },
-    {
-      buttonId: `${usedPrefix}play2 ${video.url}`,
-      buttonText: { displayText: '🎥 Ɠɛŋɛʀɑʀ ѵɩԀɛօ ɖɛՏƈɑʀɢɑ' },
-      type: 1
-    }
-  ];
-}
-
-// Función para convertir el tiempo de publicación a español
+// Convertir texto de tiempo al español
 function convertTimeToSpanish(timeText) {
   return timeText
     .replace(/year/, 'año')
