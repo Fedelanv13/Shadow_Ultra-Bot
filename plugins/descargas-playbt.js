@@ -4,10 +4,10 @@ import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysoc
 
 const handler = async (m, { conn, args, usedPrefix }) => {
   if (!args[0]) {
-    return conn.reply(m.chat, '✏️ *Ingresa el título de una canción o video de YouTube.*\n\nEjemplo:\n> *Corazón Serrano - Mix Poco Yo*', m);
+    return conn.reply(m.chat, '✏️ *Por favor ingresa un título de YouTube para buscar.*\nEjemplo:\n> *Corazón Serrano - Mix Poco Yo*', m);
   }
 
-  await m.react('🔍');
+  await m.react('🔍');  // Reacción de búsqueda
 
   await conn.sendMessage(m.chat, {
     text: '⌛ *Buscando en YouTube...*',
@@ -25,11 +25,16 @@ const handler = async (m, { conn, args, usedPrefix }) => {
     const thumbnail = await (await fetch(video.thumbnail)).buffer();
 
     const messageText = formatMessageText(video);
+    
+    // Lógica para sugerir videos relacionados automáticamente
+    const relatedVideos = searchResults.slice(1, 3).map((video, index) => `🎶 ${video.title}`).join('\n');
+
+    const messageWithSuggestions = `${messageText}\n\n🔍 *Sugerencias relacionadas:* \n${relatedVideos || 'No hay sugerencias.'}`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
-      caption: messageText,
-      footer: `✨ 𝚎𝚍𝚒𝚝𝚊𝚍𝚘 𝚙𝚘𝚛: Wirk`,
+      caption: messageWithSuggestions,
+      footer: `✨ Bot editado por: Wirk - ¡Tu bot personalizado!`,
       contextInfo: {
         mentionedJid: [m.sender],
         forwardingScore: 500,
@@ -40,11 +45,17 @@ const handler = async (m, { conn, args, usedPrefix }) => {
       viewOnce: true
     }, { quoted: m });
 
-    await m.react('✅');
+    // Sistema de logros:
+    if (!global.db.data.users[m.sender].hasSearched) {
+      global.db.data.users[m.sender].hasSearched = true;
+      conn.reply(m.chat, '🏆 ¡Felicidades! Has desbloqueado el logro "Primer Búsqueda Realizada". Sigue buscando más para obtener más logros.', m);
+    }
+
+    await m.react('✅');  // Reacción de éxito
 
   } catch (e) {
     console.error(e);
-    await m.react('❌');
+    await m.react('❌');  // Reacción de error
     conn.reply(m.chat, '*❗ Ocurrió un error al buscar el video.*', m);
   }
 };
@@ -55,6 +66,7 @@ handler.command = ['play'];
 
 export default handler;
 
+// Función para realizar la búsqueda de videos en YouTube
 async function searchVideos(query) {
   try {
     const res = await yts(query);
@@ -73,6 +85,7 @@ async function searchVideos(query) {
   }
 }
 
+// Función para formatear el texto del mensaje con los detalles del video
 function formatMessageText(video) {
   return `🎶 *RESULTADO ENCONTRADO*\n\n` +
          `*• Título:* ${video.title}\n` +
@@ -83,6 +96,7 @@ function formatMessageText(video) {
          `🌐 *Enlace:* ${video.url}`;
 }
 
+// Función para generar los botones de interacción
 function generateButtons(video, usedPrefix) {
   return [
     {
@@ -98,6 +112,7 @@ function generateButtons(video, usedPrefix) {
   ];
 }
 
+// Función para convertir el tiempo de publicación a español
 function convertTimeToSpanish(timeText) {
   return timeText
     .replace(/year/, 'año')
