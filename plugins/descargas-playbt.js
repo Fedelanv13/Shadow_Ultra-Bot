@@ -1,117 +1,44 @@
-import yts from 'yt-search';
-import fetch from 'node-fetch';
-import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysockets/baileys';
+import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from '@whiskeysockets/baileys'; import yts from 'yt-search'; import fs from 'fs'; import { format } from 'date-fns'; import { es } from 'date-fns/locale';
 
-const handler = async (m, { conn, args, usedPrefix }) => {
-  if (!args[0]) {
-    return conn.reply(m.chat, '[ ℹ️ ] ¡Por favor ingresa un título de YouTube para buscar!\n\nEjemplo: *Corazón Serrano - Mix Poco Yo*', m);
-  }
+const handler = async (m, { conn, text, usedPrefix: prefijo }) => { const device = await getDevice(m.key.id);
 
-  await m.react('📓'); // Reacción de espera
+if (!text) return conn.reply(m.chat, '🤍 Ingresa el nombre de una canción de YouTube.', m);
 
-  // Enviar TTS como mensaje de voz
-  await conn.sendMessage(m.chat, {
-  text: '❒ ∆ *¡Un momento, por favor!* ▶\n\n☑ *Estamos buscando tu video...* ✯',
-  tts: true
-}, { quoted: m });
+const results = await yts(text);
+const videos = results.videos.slice(0, 20);
 
-  try {
-    const searchResults = await searchVideos(args.join(" "));
+if (device !== 'desktop' && device !== 'web') {
+    const video = videos[Math.floor(Math.random() * videos.length)];
+    const messa = await prepareWAMessageMedia({ image: { url: video.thumbnail }}, { upload: conn.waUploadToServer });
 
-    if (!searchResults.length) {
-      throw new Error('No se encontraron resultados. Intenta con otro título.');
-    }
+    const interactiveMessage = {
+        body: {
+            text: `▶️ *YT: ${video.title}*
 
-    const video = searchResults[0];
-    const thumbnail = await (await fetch(video.thumbnail)).buffer();
+⏱️ Duración: ${video.duration.timestamp} 🎙️ Autor: ${video.author.name} 📅 Publicado: ${video.ago} 🔗 Enlace: ${video.url}}, footer: { text: '✦ Código editado por Wirk' }, header: { hasMediaAttachment: true, imageMessage: messa.imageMessage }, nativeFlowMessage: { buttons: [ { name: 'single_select', buttonParamsJson: JSON.stringify({ title: '✨ Elige una opción de descarga:', sections: videos.map((v) => ({ title: v.title, rows: [ { header: v.title, title: v.author.name, description: 'MP3 - Solo Audio', id:${prefijo}ytmp3 ${v.url}}, { header: v.title, title: v.author.name, description: 'MP4 - Solo Video', id:${prefijo}ytmp4 ${v.url}}, { header: v.title, title: v.author.name, description: 'Documento MP3', id:${prefijo}ytmp3doc ${v.url}` } ] })) }) } ], messageParamsJson: '' } };
 
-    const messageText = formatMessageText(video);
+let msg = generateWAMessageFromContent(m.chat, {
+        viewOnceMessage: { message: { interactiveMessage } }
+    }, { userJid: conn.user.jid, quoted: null });
 
-    await conn.sendMessage(m.chat, {
-      image: thumbnail,
-      caption: messageText,
-      footer: `✦ Codigo Editado por: Wirk ✦`,
-      contextInfo: {
-        mentionedJid: [m.sender],
-        forwardingScore: 999,
-        isForwarded: true
-      },
-      buttons: generateButtons(video, usedPrefix),
-      headerType: 1,
-      viewOnce: true
-    }, { quoted: m });
+    conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
 
-    await m.react('✅');
-  } catch (e) {
-    console.error(e);
-    await m.react('✖️');
-    conn.reply(m.chat, '*`Hubo un error al buscar el video.`*', m);
-  }
+} else {
+    const idioma = global.db.data.users[m.sender].language;
+    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
+    const traductor = _translate.plugins.buscador_yts;
+
+    const list = results.all.filter(v => v.type === 'video').map(v => {
+        return `*${v.title}*
+
+🔗 ${v.url} ⏱️ ${v.timestamp} 📅 ${v.ago} 👁️ ${v.views}`; }).join('\n\n──────────────\n\n');
+
+conn.sendFile(m.chat, results.all[0].thumbnail, 'thumb.jpg', list.trim(), m);
+}
+
 };
 
-handler.help = ['play'];
-handler.tags = ['descargas'];
-handler.command = ['play'];
+handler.help = ['play <nombre>']; handler.tags = ['descargas']; handler.command = ['play']; handler.register = true;
 
 export default handler;
 
-// Función para realizar la búsqueda de videos en YouTube
-async function searchVideos(query) {
-  try {
-    const res = await yts(query);
-    return res.videos.slice(0, 10).map(video => ({
-      title: video.title,
-      url: video.url,
-      thumbnail: video.thumbnail,
-      channel: video.author.name,
-      published: video.timestamp || 'No disponible',
-      views: video.views || 'No disponible',
-      duration: video.duration.timestamp || 'No disponible'
-    }));
-  } catch (error) {
-    console.error('Error en yt-search:', error.message);
-    return [];
-  }
-}
-
-// Función para formatear el texto del mensaje con los detalles del video
-function formatMessageText(video) {
-  let messageText = `*🍌 ɾҽʂυʅƚαԃσ ԃҽ Ⴆύʂϙυҽԃα ραɾα:* ${video.title}\n\n`;
-  messageText += `⌛ 𝙳𝚞𝚛𝚊𝚌𝚒𝚘́𝚗: ${video.duration || 'No disponible'}\n`;
-  messageText += `📺 𝙲𝚊𝚗𝚊𝚕: ${video.channel || 'Desconocido'}\n`;
-  messageText += `📅 𝙿𝚞𝚋𝚕𝚒𝚌𝚊𝚍𝚘: ${convertTimeToSpanish(video.published)}\n`;
-  messageText += `👁️ 𝚅𝚒𝚜𝚝𝚊𝚜: ${video.views || 'No disponible'}\n`;
-  messageText += `🔗 𝙴𝚗𝚕𝚊𝚌𝚎: ${video.url}\n`; // Siempre muestra el link
-  return messageText;
-}
-
-// Función para generar los botones de interacción
-function generateButtons(video, usedPrefix) {
-  return [
-    {
-      buttonId: `${usedPrefix}ytmp3 ${video.url}`,
-      buttonText: { displayText: '🎶 ᑕᒪᏆᑕ ᑭᗩᖇᗩ ᗪᙓՏᑕᗩᖇǤᗩᖇ ᗩᑌᗪᏆᗝ' },
-      type: 1
-    },
-    {
-      buttonId: `${usedPrefix}play2 ${video.url}`,
-      buttonText: { displayText: '🎥 Ɠɛŋɛʀɑʀ ѵɩԀɛօ ɖɛՏƈɑʀɢɑ' },
-      type: 1
-    }
-  ];
-}
-
-// Función para convertir el tiempo de publicación a español
-function convertTimeToSpanish(timeText) {
-  return timeText
-    .replace(/year/, 'año')
-    .replace(/years/, 'años')
-    .replace(/month/, 'mes')
-    .replace(/months/, 'meses')
-    .replace(/day/, 'día')
-    .replace(/days/, 'días')
-    .replace(/hour/, 'hora')
-    .replace(/hours/, 'horas')
-    .replace(/minute/, 'minuto')
-    .replace(/minutes/, 'minutos');
-}
