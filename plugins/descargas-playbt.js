@@ -140,12 +140,14 @@ function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
 }
 
-// Fuente estilizada (aplicando la fuente que me indicaste)
+// Fuente estilizada completa
 function fancyText(str) {
-  const fancyFont = 'ᥲᑲᥴძᥱ𝖿gһіȷkᥣm';
-  const normal = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  return [...str].map(c => {
-    const index = normal.indexOf(c);
-    return index >= 0 ? fancyFont[index] : c;
-  }).join('');
-}
+  const fancyFont = {
+    'a': 'ᥲ', 'b': 'ᑲ', 'c': 'ᥴ', 'd': 'ძ', 'e': 'ᥱ', 'f': '𝖿', 'g': 'g', 'h': 'һ', 'i': 'і', 'j': 'ȷ', 'k': 'k', 'l': 'ᥣ', 'm': 'm',
+    'n': 'n', 'o': 'o', 'p': 'p', 'q': 'q', 'r': 'r', 's': 's', 't': 't', 'u': 'u', 'v': 'v', 'w': 'w', 'x': 'x', 'y': 'y', 'z': 'z',
+    'A': 'ᥲ', 'B': 'ᑲ', 'C': 'ᥴ', 'D': 'ძ', 'E': 'ᥱ', 'F': '𝖿', 'G': 'g', 'H': 'һ', 'I': 'і', 'J': 'ȷ', 'K': 'k', 'L': 'ᥣ', 'M': 'm',
+    'N': 'n', 'O': 'o', 'P': 'p', 'Q': 'q', 'R': 'r', 'S': 's', 'T': 't', 'U': 'u', 'V': 'v', 'W': 'w', 'X': 'x', 'Y': 'y', 'Z': 'z'
+  };
+
+  return [...str].map(c => fancyFont[c] || c).join('');
+        }
