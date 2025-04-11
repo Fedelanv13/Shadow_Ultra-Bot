@@ -4,13 +4,13 @@ import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysoc
 
 const handler = async (m, { conn, args, usedPrefix }) => {
   if (!args[0]) {
-    return conn.reply(m.chat, '✏️ *Por favor ingresa un título de YouTube para buscar.*\nEjemplo:\n> *Corazón Serrano - Mix Poco Yo*', m);
+    return conn.reply(m.chat, '✏️ *Por favor ingresa un título de YouTube para buscar.*\n\n*Ejemplo:* \n> *Corazón Serrano - Mix Poco Yo*', m);
   }
 
   await m.react('🔍');
 
   await conn.sendMessage(m.chat, {
-    text: '⌛ *Buscando en YouTube...*',
+    text: '⏳ *Buscando el mejor resultado para ti...*',
     tts: true
   }, { quoted: m });
 
@@ -24,11 +24,11 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
     const messageText = formatMessageText(video);
 
-    // Mezclar sugerencias aleatoriamente
+    // Mezclar sugerencias aleatorias
     const shuffledSuggestions = shuffleArray(searchResults.slice(1)).slice(0, 5);
-    const relatedVideos = shuffledSuggestions.map(v => `🎶 ${v.title}`).join('\n');
+    const relatedVideos = shuffledSuggestions.map(v => `𓂃⭒ ${fancyText(v.title)}`).join('\n');
 
-    // Tendencias 2025 aleatorias
+    // Tendencias aleatorias
     const tendencias = shuffleArray([
       'Peso Pluma - La Durango',
       'Bad Bunny - Oasis 2',
@@ -40,17 +40,19 @@ const handler = async (m, { conn, args, usedPrefix }) => {
       'J Balvin - Mundo Real',
       'Trueno - La Resistencia',
       'Quevedo - El Último Rayo'
-    ]).slice(0, 3).map(t => `✨ ${t}`).join('\n');
+    ]).slice(0, 3).map(song => `⭑ ${fancyText(song)}`).join('\n');
 
-    const messageWithSuggestions = `${messageText}\n\n🔍 *Sugerencias relacionadas:* \n${relatedVideos || 'No hay sugerencias.'}\n\n⭐ *Tendencias musicales 2025:*\n${tendencias}`;
+    const fullMessage = `╭─〘 𝙍𝙀𝙎𝙐𝙇𝙏𝘼𝘿𝙊 𝙀𝙉𝘾𝙊𝙉𝙏𝙍𝘼𝘿𝙊 〙─╮\n${messageText}\n╰────────────────────╯\n\n` +
+                        `╭───⊷ *𖥔 Sᴜɢᴇʀᴇɴᴄɪᴀs ʀᴇʟᴀᴄɪᴏɴᴀᴅᴀs:*\n${relatedVideos}\n╰──────────────╯\n\n` +
+                        `╭───⊷ *𖥔 Tᴇɴᴅᴇɴᴄɪᴀs 𝟐𝟎𝟐𝟓:*\n${tendencias}\n╰──────────────╯`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
-      caption: messageWithSuggestions,
-      footer: `✨ Bot editado por: Wirk - ¡Tu bot personalizado!`,
+      caption: fullMessage,
+      footer: `🧠 Bot editado por Wirk | Mejora continua...`,
       contextInfo: {
         mentionedJid: [m.sender],
-        forwardingScore: 500,
+        forwardingScore: 999,
         isForwarded: true
       },
       buttons: generateButtons(video, usedPrefix),
@@ -73,7 +75,7 @@ handler.command = ['play'];
 
 export default handler;
 
-// Función para realizar la búsqueda de videos en YouTube
+// Función de búsqueda YouTube
 async function searchVideos(query) {
   try {
     const res = await yts(query);
@@ -92,34 +94,33 @@ async function searchVideos(query) {
   }
 }
 
-// Función para formatear el mensaje principal
+// Formateo visual
 function formatMessageText(video) {
-  return `🎶 *RESULTADO ENCONTRADO*\n\n` +
-         `*• Título:* ${video.title}\n` +
-         `*• Duración:* ${video.duration || 'No disponible'}\n` +
-         `*• Canal:* ${video.channel || 'Desconocido'}\n` +
-         `*• Publicado:* ${convertTimeToSpanish(video.published)}\n` +
-         `*• Vistas:* ${video.views || 'No disponible'}\n\n` +
-         `🌐 *Enlace:* ${video.url}`;
+  return `\n*╭📺 Título:* 『 ${video.title} 』\n` +
+         `*├⏱ Duración:* ${video.duration || 'No disponible'}\n` +
+         `*├👤 Canal:* ${video.channel || 'Desconocido'}\n` +
+         `*├🕒 Publicado:* ${convertTimeToSpanish(video.published)}\n` +
+         `*├👁 Vistas:* ${video.views || 'No disponible'}\n` +
+         `*╰🌐 Enlace:* ${video.url}`;
 }
 
-// Botones de descarga
+// Botones decorativos
 function generateButtons(video, usedPrefix) {
   return [
     {
       buttonId: `${usedPrefix}ytmp3 ${video.url}`,
-      buttonText: { displayText: '🎧 Descargar Audio (MP3)' },
+      buttonText: { displayText: '🎧 Descargar MP3' },
       type: 1
     },
     {
       buttonId: `${usedPrefix}ytmp4 ${video.url}`,
-      buttonText: { displayText: '🎬 Descargar Video (MP4)' },
+      buttonText: { displayText: '🎬 Descargar MP4' },
       type: 1
     }
   ];
 }
 
-// Conversión de tiempo a español
+// Traducir fechas
 function convertTimeToSpanish(timeText) {
   return timeText
     .replace(/year/, 'año')
@@ -134,7 +135,18 @@ function convertTimeToSpanish(timeText) {
     .replace(/minutes/, 'minutos');
 }
 
-// Mezclar array aleatoriamente
+// Array aleatorio
 function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
 }
+
+// Fuente decorativa estilo fancy
+function fancyText(str) {
+  const normal = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const fancy =  '𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏' +
+                 '𝒜𝐵𝒞𝒟𝐸𝐹𝒢𝐻𝐼𝒥𝒦𝐿𝑀𝒩𝒪𝒫𝒬𝑅𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵';
+  return [...str].map(c => {
+    const index = normal.indexOf(c);
+    return index >= 0 ? fancy[index] : c;
+  }).join('');
+                                 }
