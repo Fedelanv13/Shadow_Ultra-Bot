@@ -26,23 +26,16 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
     const messageText = formatMessageText(video);
 
-    // Lista de los primeros 5 resultados con botones
-    const buttons = searchResults.slice(0, 5).map((video, index) => ({
-      buttonId: `${usedPrefix}play ${video.url}`,
-      buttonText: { displayText: `🎶 ${video.title}` },
-      type: 1
-    }));
-
     await conn.sendMessage(m.chat, {
       image: thumbnail,
       caption: messageText,
-      footer: `✨ 𝙱𝚘𝚝 𝚎𝚍𝚒𝚝𝚊𝚍𝚘 𝚙𝚘𝚛: Wirk`,
+      footer: `✨ 𝚎𝚍𝚒𝚝𝚊𝚍𝚘 𝚙𝚘𝚛: Wirk`,
       contextInfo: {
         mentionedJid: [m.sender],
         forwardingScore: 500,
         isForwarded: true
       },
-      buttons: buttons,
+      buttons: generateButtons(video, usedPrefix),
       headerType: 1,
       viewOnce: true
     }, { quoted: m });
