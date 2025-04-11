@@ -26,9 +26,8 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
     const messageText = formatMessageText(video);
     
-    // Lógica para sugerir videos relacionados automáticamente
-    const relatedVideos = searchResults.slice(1, 3).map((video, index) => `🎶 ${video.title}`).join('\n');
-
+    // Sugerencias automáticas
+    const relatedVideos = searchResults.slice(1, 3).map((v, i) => `🎶 ${v.title}`).join('\n');
     const messageWithSuggestions = `${messageText}\n\n🔍 *Sugerencias relacionadas:* \n${relatedVideos || 'No hay sugerencias.'}`;
 
     await conn.sendMessage(m.chat, {
@@ -44,42 +43,6 @@ const handler = async (m, { conn, args, usedPrefix }) => {
       headerType: 1,
       viewOnce: true
     }, { quoted: m });
-
-    // Sistema de logros:
-    const user = global.db.data.users[m.sender];
-    let achievedLogros = user.achievements || [];
-
-    // Logros por búsqueda
-    if (!user.hasSearched) {
-      user.hasSearched = true;
-      achievedLogros.push('🏆 Logro desbloqueado: Primera Búsqueda');
-    }
-
-    // Logros por interacción con botones
-    if (!user.hasPressedButton) {
-      user.hasPressedButton = true;
-      achievedLogros.push('🎉 Logro desbloqueado: Primera Interacción con Botones');
-    }
-
-    // Logros por realizar ciertas actividades
-    const logrosExtra = [
-      '🔍 Logro desbloqueado: Buscar más de 3 videos',
-      '📂 Logro desbloqueado: Guardar tu primer video',
-      '🎥 Logro desbloqueado: Descargar tu primer video',
-      '🎧 Logro desbloqueado: Escuchar música más de 5 veces',
-      '🌍 Logro desbloqueado: Buscar música internacional'
-      // Aquí puedes seguir agregando logros personalizados.
-    ];
-
-    // Añadir estos logros al usuario
-    achievedLogros.push(...logrosExtra);
-
-    // Actualiza los logros
-    user.achievements = achievedLogros;
-
-    // Enviar los logros al usuario
-    const achievementsMessage = `🎉 ¡Felicidades! Has desbloqueado los siguientes logros:\n\n${achievedLogros.join('\n')}`;
-    conn.reply(m.chat, achievementsMessage, m);
 
     await m.react('✅');  // Reacción de éxito
 
@@ -115,7 +78,7 @@ async function searchVideos(query) {
   }
 }
 
-// Función para formatear el texto del mensaje con los detalles del video
+// Formateo de mensaje
 function formatMessageText(video) {
   return `🎶 *RESULTADO ENCONTRADO*\n\n` +
          `*• Título:* ${video.title}\n` +
@@ -126,7 +89,7 @@ function formatMessageText(video) {
          `🌐 *Enlace:* ${video.url}`;
 }
 
-// Función para generar los botones de interacción
+// Botones de descarga
 function generateButtons(video, usedPrefix) {
   return [
     {
@@ -142,7 +105,7 @@ function generateButtons(video, usedPrefix) {
   ];
 }
 
-// Función para convertir el tiempo de publicación a español
+// Conversión de fechas a español
 function convertTimeToSpanish(timeText) {
   return timeText
     .replace(/year/, 'año')
@@ -155,4 +118,4 @@ function convertTimeToSpanish(timeText) {
     .replace(/hours/, 'horas')
     .replace(/minute/, 'minuto')
     .replace(/minutes/, 'minutos');
-}
+      }
