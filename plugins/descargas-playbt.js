@@ -26,21 +26,23 @@ const handler = async (m, { conn, args, usedPrefix }) => {
 
     // Mezclar sugerencias aleatorias
     const shuffledSuggestions = shuffleArray(searchResults.slice(1)).slice(0, 5);
-    const relatedVideos = shuffledSuggestions.map(v => `𓂃⭒ ${fancyText(v.title)}`).join('\n');
+    const relatedVideos = shuffledSuggestions
+      .map((v, i) => `   ${i + 1}. ✰ ${fancyText(v.title)}`)
+      .join('\n');
 
     // Tendencias aleatorias
     const tendencias = shuffleArray([
-      'Peso Pluma - La Durango',
-      'Bad Bunny - Oasis 2',
-      'Karol G - Luna Llena',
-      'Feid - Fumeteo 3000',
-      'Rauw Alejandro - Eclipse',
-      'Bizarrap Music Sessions #63',
-      'Young Miko - Alienígena',
-      'J Balvin - Mundo Real',
-      'Trueno - La Resistencia',
-      'Quevedo - El Último Rayo'
-    ]).slice(0, 3).map(song => `⭑ ${fancyText(song)}`).join('\n');
+      '🎤 Peso Pluma - La Durango',
+      '🎶 Bad Bunny - Oasis 2',
+      '🌕 Karol G - Luna Llena',
+      '🔥 Feid - Fumeteo 3000',
+      '⚡ Rauw Alejandro - Eclipse',
+      '🎧 Bizarrap Music Sessions #63',
+      '⭐ Young Miko - Alienígena',
+      '🌍 J Balvin - Mundo Real',
+      '🌀 Trueno - La Resistencia',
+      '🚀 Quevedo - El Último Rayo'
+    ]).slice(0, 3).map((t, i) => `   ${i + 1}. ✰ ${fancyText(t)}`).join('\n');
 
     const fullMessage = `╭─〘 𝙍𝙀𝙎𝙐𝙇𝙏𝘼𝘿𝙊 𝙀𝙉𝘾𝙊𝙉𝙏𝙍𝘼𝘿𝙊 〙─╮\n${messageText}\n╰────────────────────╯\n\n` +
                         `╭───⊷ *🔎 Sugerencias Relacionadas:*\n${relatedVideos}\n╰──────────────╯\n\n` +
@@ -140,14 +142,18 @@ function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
 }
 
-// Fuente estilizada completa
-function fancyText(str) {
-  const fancyFont = {
-    'a': 'ᥲ', 'b': 'ᑲ', 'c': 'ᥴ', 'd': 'ძ', 'e': 'ᥱ', 'f': '𝖿', 'g': 'g', 'h': 'һ', 'i': 'і', 'j': 'ȷ', 'k': 'k', 'l': 'ᥣ', 'm': 'm',
-    'n': 'n', 'o': 'o', 'p': 'p', 'q': 'q', 'r': 'r', 's': 's', 't': 't', 'u': 'u', 'v': 'v', 'w': 'w', 'x': 'x', 'y': 'y', 'z': 'z',
-    'A': 'ᥲ', 'B': 'ᑲ', 'C': 'ᥴ', 'D': 'ძ', 'E': 'ᥱ', 'F': '𝖿', 'G': 'g', 'H': 'һ', 'I': 'і', 'J': 'ȷ', 'K': 'k', 'L': 'ᥣ', 'M': 'm',
-    'N': 'n', 'O': 'o', 'P': 'p', 'Q': 'q', 'R': 'r', 'S': 's', 'T': 't', 'U': 'u', 'V': 'v', 'W': 'w', 'X': 'x', 'Y': 'y', 'Z': 'z'
-  };
+// Fancy font para sugerencias/tendencias
+const fancyAlphabet = {
+  a: 'ᥲ', b: 'ᑲ', c: 'ᥴ', d: 'ძ', e: 'ᥱ', f: '𝖿', g: 'ց', h: 'һ',
+  i: 'і', j: 'ȷ', k: 'ƙ', l: 'ᥣ', m: '𝖒', n: 'ᥙ', o: '𝖔', p: 'ρ',
+  q: '𝗊', r: '𝗋', s: '𝗌', t: '𝗍', u: '𝗎', v: '𝗏', w: '𝗐', x: '𝗑',
+  y: '𝗒', z: '𝗓',
+  A: 'ᗩ', B: 'ᗷ', C: 'ᑕ', D: 'ᗪ', E: 'ᕮ', F: 'ᖴ', G: 'ᘜ', H: 'ᕼ',
+  I: 'ᘐ', J: 'ᒍ', K: 'K', L: 'ᒪ', M: 'ᗰ', N: 'ᑎ', O: 'O', P: 'ᑭ',
+  Q: 'ᑫ', R: 'ᖇ', S: 'ᔕ', T: 'T', U: 'ᑌ', V: 'ᐯ', W: 'ᗯ', X: '᙭',
+  Y: 'Y', Z: 'ᘔ'
+};
 
-  return [...str].map(c => fancyFont[c] || c).join('');
-        }
+function fancyText(text) {
+  return text.split('').map(c => fancyAlphabet[c] || c).join('');
+}
