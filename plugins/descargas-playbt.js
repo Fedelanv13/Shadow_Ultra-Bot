@@ -1,44 +1,120 @@
-import { prepareWAMessageMedia, generateWAMessageFromContent, getDevice } from '@whiskeysockets/baileys'; import yts from 'yt-search'; import fs from 'fs'; import { format } from 'date-fns'; import { es } from 'date-fns/locale';
+import yts from 'yt-search';
+import fetch from 'node-fetch';
+import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysockets/baileys';
 
-const handler = async (m, { conn, text, usedPrefix: prefijo }) => { const device = await getDevice(m.key.id);
+const handler = async (m, { conn, args, usedPrefix }) => {
+  if (!args[0]) {
+    return conn.reply(m.chat, '✏️ *Ingresa el título de una canción o video de YouTube.*\n\nEjemplo:\n> *Corazón Serrano - Mix Poco Yo*', m);
+  }
 
-if (!text) return conn.reply(m.chat, '🤍 Ingresa el nombre de una canción de YouTube.', m);
+  await m.react('🔍');
 
-const results = await yts(text);
-const videos = results.videos.slice(0, 20);
+  await conn.sendMessage(m.chat, {
+    text: '⌛ *Buscando en YouTube...*',
+    tts: true
+  }, { quoted: m });
 
-if (device !== 'desktop' && device !== 'web') {
-    const video = videos[Math.floor(Math.random() * videos.length)];
-    const messa = await prepareWAMessageMedia({ image: { url: video.thumbnail }}, { upload: conn.waUploadToServer });
+  try {
+    const searchResults = await searchVideos(args.join(" "));
 
-    const interactiveMessage = {
-        body: {
-            text: `▶️ *YT: ${video.title}*
+    if (!searchResults.length) {
+      throw new Error('No se encontraron resultados.');
+    }
 
-⏱️ Duración: ${video.duration.timestamp} 🎙️ Autor: ${video.author.name} 📅 Publicado: ${video.ago} 🔗 Enlace: ${video.url}}, footer: { text: '✦ Código editado por Wirk' }, header: { hasMediaAttachment: true, imageMessage: messa.imageMessage }, nativeFlowMessage: { buttons: [ { name: 'single_select', buttonParamsJson: JSON.stringify({ title: '✨ Elige una opción de descarga:', sections: videos.map((v) => ({ title: v.title, rows: [ { header: v.title, title: v.author.name, description: 'MP3 - Solo Audio', id:${prefijo}ytmp3 ${v.url}}, { header: v.title, title: v.author.name, description: 'MP4 - Solo Video', id:${prefijo}ytmp4 ${v.url}}, { header: v.title, title: v.author.name, description: 'Documento MP3', id:${prefijo}ytmp3doc ${v.url}` } ] })) }) } ], messageParamsJson: '' } };
+    const video = searchResults[0];
+    const thumbnail = await (await fetch(video.thumbnail)).buffer();
 
-let msg = generateWAMessageFromContent(m.chat, {
-        viewOnceMessage: { message: { interactiveMessage } }
-    }, { userJid: conn.user.jid, quoted: null });
+    const messageText = formatMessageText(video);
 
-    conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+    // Lista de los primeros 5 resultados con botones
+    const buttons = searchResults.slice(0, 5).map((video, index) => ({
+      buttonId: `${usedPrefix}play ${video.url}`,
+      buttonText: { displayText: `🎶 ${video.title}` },
+      type: 1
+    }));
 
-} else {
-    const idioma = global.db.data.users[m.sender].language;
-    const _translate = JSON.parse(fs.readFileSync(`./language/${idioma}.json`));
-    const traductor = _translate.plugins.buscador_yts;
+    await conn.sendMessage(m.chat, {
+      image: thumbnail,
+      caption: messageText,
+      footer: `✨ 𝙱𝚘𝚝 𝚎𝚍𝚒𝚝𝚊𝚍𝚘 𝚙𝚘𝚛: Wirk`,
+      contextInfo: {
+        mentionedJid: [m.sender],
+        forwardingScore: 500,
+        isForwarded: true
+      },
+      buttons: buttons,
+      headerType: 1,
+      viewOnce: true
+    }, { quoted: m });
 
-    const list = results.all.filter(v => v.type === 'video').map(v => {
-        return `*${v.title}*
+    await m.react('✅');
 
-🔗 ${v.url} ⏱️ ${v.timestamp} 📅 ${v.ago} 👁️ ${v.views}`; }).join('\n\n──────────────\n\n');
-
-conn.sendFile(m.chat, results.all[0].thumbnail, 'thumb.jpg', list.trim(), m);
-}
-
+  } catch (e) {
+    console.error(e);
+    await m.react('❌');
+    conn.reply(m.chat, '*❗ Ocurrió un error al buscar el video.*', m);
+  }
 };
 
-handler.help = ['play <nombre>']; handler.tags = ['descargas']; handler.command = ['play']; handler.register = true;
+handler.help = ['play'];
+handler.tags = ['descargas'];
+handler.command = ['play'];
 
 export default handler;
 
+async function searchVideos(query) {
+  try {
+    const res = await yts(query);
+    return res.videos.slice(0, 10).map(video => ({
+      title: video.title,
+      url: video.url,
+      thumbnail: video.thumbnail,
+      channel: video.author.name,
+      published: video.timestamp || 'No disponible',
+      views: video.views || 'No disponible',
+      duration: video.duration.timestamp || 'No disponible'
+    }));
+  } catch (error) {
+    console.error('Error en yt-search:', error.message);
+    return [];
+  }
+}
+
+function formatMessageText(video) {
+  return `🎶 *RESULTADO ENCONTRADO*\n\n` +
+         `*• Título:* ${video.title}\n` +
+         `*• Duración:* ${video.duration || 'No disponible'}\n` +
+         `*• Canal:* ${video.channel || 'Desconocido'}\n` +
+         `*• Publicado:* ${convertTimeToSpanish(video.published)}\n` +
+         `*• Vistas:* ${video.views || 'No disponible'}\n\n` +
+         `🌐 *Enlace:* ${video.url}`;
+}
+
+function generateButtons(video, usedPrefix) {
+  return [
+    {
+      buttonId: `${usedPrefix}ytmp3 ${video.url}`,
+      buttonText: { displayText: '🎧 Descargar Audio (MP3)' },
+      type: 1
+    },
+    {
+      buttonId: `${usedPrefix}ytmp4 ${video.url}`,
+      buttonText: { displayText: '🎬 Descargar Video (MP4)' },
+      type: 1
+    }
+  ];
+}
+
+function convertTimeToSpanish(timeText) {
+  return timeText
+    .replace(/year/, 'año')
+    .replace(/years/, 'años')
+    .replace(/month/, 'mes')
+    .replace(/months/, 'meses')
+    .replace(/day/, 'día')
+    .replace(/days/, 'días')
+    .replace(/hour/, 'hora')
+    .replace(/hours/, 'horas')
+    .replace(/minute/, 'minuto')
+    .replace(/minutes/, 'minutos');
+}
