@@ -27,8 +27,8 @@ let handler = async (m, { conn, text, usedPrefix, command, args }) => {
   }
 };
 
-handler.help = ['ytmp4'];
-handler.command = ['ytv2', 'ytmp4', 'ytv'];
+handler.help = ['ytmp4doc'];
+handler.command = ['ytv2', 'ytmp4doc', 'ytv'];
 handler.tags = ['dl'];
 handler.diamond = true;
 
