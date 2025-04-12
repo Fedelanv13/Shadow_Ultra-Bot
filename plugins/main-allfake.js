@@ -137,9 +137,9 @@ global.fake = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo
 }}, { quoted: m }
 
 //ID CANALES
-global.idchannel = '120363357231409846@newsletter'
+global.idchannel = '120363419146589983@newsletter'
 global.canalIdM = ["120363402846939411@newsletter", "120363357231409846@newsletter", "120363419146589983@newsletter"]
-global.canalNombreM = ["⏤͟͟͞͞𝖲𝗁ᥲძ𝗈ա  ⚡︎  𝖴𝗅𝗍𝗋𝖺۵࿐", "Abundantes Botsitos👻", "Betty's World 🌻"]
+global.canalNombreM = ["Betty's World 🌻", "Abundantes Botsitos👻", "Betty's World 🌻"]
 global.channelRD = await getRandomChannel()
 // global.estilo = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(false ? { remoteJid: "3876577197-120363302285079181@g.us" } : {}) }, message: { orderMessage: { itemCount : -999999, status: 1, surface : 1, message: `${packname}`, orderTitle: 'Bang', thumbnail: icons, sellerJid: '0@s.whatsapp.net'}}}
 
