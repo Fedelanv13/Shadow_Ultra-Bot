@@ -145,8 +145,7 @@ const savetube = {
       if (!result.status) return result;
       const decrypted = await savetube.crypto.decrypt(result.data.data);
 
-      // Verificar la duración del video antes de permitir la descarga
-      const durationInMinutes = decrypted.duration / 60; // Convertir duración a minutos
+      const durationInMinutes = decrypted.duration / 60;
       if (durationInMinutes > 60) {
         return {
           status: false,
@@ -220,10 +219,20 @@ const handler = async (m, { conn, args, command }) => {
     } else {
       await conn.sendMessage(m.chat, {
         audio: { url: download },
-        caption,
-        mimetype: 'audio/mpeg',
+        mimetype: "audio/mpeg",
         ptt: false,
-        fileName: `${title}.mp3`
+        fileName: `${title}.mp3`,
+        contextInfo: {
+          externalAdReply: {
+            title: title,
+            body: "⚡ 𝙎𝙝𝙖𝙙𝙤𝙬 𝙐𝙡𝙩𝙧𝙖 𝙀𝙙𝙞𝙩𝙚𝙙 ⚡",
+            mediaType: 1,
+            previewType: "PHOTO",
+            thumbnailUrl: thumbnail,
+            showAdAttribution: true,
+            renderLargerThumbnail: true
+          }
+        }
       }, { quoted: m });
     }
 
