@@ -61,7 +61,7 @@ global.wait = '*[ ⏳ ] Aguarde un momento...*';
 //ENLACES
 var grupo = 'https://chat.whatsapp.com/FCS6htvAmlT7nq006lxU4I'  
 var github = 'https://github.com/CrxstianEscobar/ShadowBot-MD' 
-var web = 'https://shadow-bot.vercel.app/' 
+var web = 'https://chat.whatsapp.com/If3WAOMJqZp2WLqDp9n4Cw' 
 let instagram = 'https://www.instagram.com/shadowbot.md'
 
 global.redes = [grupo, github, web, instagram].getRandom()
