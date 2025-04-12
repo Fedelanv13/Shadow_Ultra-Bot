@@ -27,12 +27,12 @@ let handler = async (m, { conn, args, text }) => {
   let link = video?.data?.url || video?.download_url || video?.result?.dl_url || video?.downloads?.link?.[0];
   if (!link) return m.reply('《✧》Hubo un error al intentar acceder al link.\n> Si el problema persiste, repórtalo en el grupo de soporte.');
 
-  // Mensaje decorado previo al envío del video
+  
   await conn.sendMessage(m.chat, {
     text: `╭─── ⊷\n│ ✅ 𝙑𝙞𝙙𝙚𝙤 𝙙𝙚𝙨𝙘𝙖𝙧𝙜𝙖𝙙𝙤 𝙘𝙤𝙣 𝙚́𝙭𝙞𝙩𝙤\n│ 📤 𝙀𝙣𝙫𝙞𝙖𝙣𝙙𝙤...\n╰────────────⊷`,
   }, { quoted: m });
 
-  // Envío del video con caption decorada y resolución
+  
   await conn.sendMessage(m.chat, {
     video: { url: link },
     mimetype: "video/mp4",
