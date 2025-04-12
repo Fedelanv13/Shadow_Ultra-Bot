@@ -18,7 +18,7 @@ if (data5.size.includes('GB') || data5.size.replace(' MB', '') > 999) {
 return await conn.reply(m.chat, `✿ El archivo es demaciado pesado.`, m)}
 await conn.sendMessage(m.chat, {document: {url: data5.dllink}, mimetype: 'application/vnd.android.package-archive', fileName: data5.name + '.apk', caption: null}, {quoted: fkontak})
 } catch {
-return conn.reply(m.chat, `${msm} Ocurrió un fallo...`, m)}}
+return conn.reply(m.chat, `$Ocurrió un fallo...`, m)}}
 
 handler.tags = ['descargas']
 handler.help = ['apkmod']
