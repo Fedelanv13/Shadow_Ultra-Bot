@@ -1,13 +1,13 @@
 import fetch from "node-fetch";
 import yts from "yt-search";
 
-// API en formato Base64
+// API 😎
 const encodedApi = "aHR0cHM6Ly9hcGkudnJlZGVuLndlYi5pZC9hcGkveXRtcDM=";
 
-// Función para decodificar la URL de la API
+// ⏳
 const getApiUrl = () => Buffer.from(encodedApi, "base64").toString("utf-8");
 
-// Función para obtener datos de la API con reintentos
+// nada por aca  XD
 const fetchWithRetries = async (url, maxRetries = 2) => {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -43,11 +43,11 @@ let handler = async (m, { conn, text }) => {
     const apiUrl = `${getApiUrl()}?url=${encodeURIComponent(video.url)}`;
     const apiData = await fetchWithRetries(apiUrl);
 
-    // Enviar el audio como mensaje de voz (PTT)
+    // Enviar EL AUDIO 🤘
     const audioMessage = {
       audio: { url: apiData.download.url },
       mimetype: 'audio/mpeg',
-      ptt: false,  // Esto hace que se envíe como mensaje de voz
+      ptt: false,  
       fileName: `${video.title}.mp3`,
     };
 
