@@ -41,7 +41,7 @@ var handler = async (m, { conn }) => {
 ┃    • RAM usada: ${usedMem}
 ┃    • RAM total: ${totalMem}
 ┃
-╰━━━〔 ⚙️ Sistema Estable 〕━━━⬣
+╰━━〔 ⚙️ Sistema Estable 〕━⬣
 `.trim()
 
   m.react('⚡')
