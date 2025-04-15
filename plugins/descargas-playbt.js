@@ -13,13 +13,11 @@ Ejemplo:
   await m.react('🔍');
 
   await conn.sendMessage(m.chat, { 
-    text: `⏳ Buscando...
-
-Estoy buscando el mejor resultado para:
+    text: `⏳ *Buscando...*
 \`\`\`
 ${args.join(" ")}
 \`\`\`
-Por favor espera un momento...`, 
+_Por favor espera un momento..._`, 
     tts: false 
   }, { quoted: m });
 
