@@ -4,15 +4,11 @@ import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysoc
 
 const handler = async (m, { conn, args, usedPrefix }) => {
   if (!args[0]) {
-    return conn.reply(m.chat, '✏️ *Por favor ingresa un título de YouTube para buscar.*\n\n*Ejemplo:* \n> *Corazón Serrano - Mix Poco Yo*', m);
+    return conn.reply(m.chat, '✏️ *Ingresa un título para buscar en YouTube.*\n\n*Ejemplo:* \n> *Corazón Serrano - Mix Poco Yo*', m);
   }
 
   await m.react('🔍');
-
-  await conn.sendMessage(m.chat, {
-    text: '⏳',
-    tts: true
-  }, { quoted: m });
+  await conn.sendMessage(m.chat, { text: '⏳ Buscando el mejor resultado para ti...', tts: false }, { quoted: m });
 
   try {
     const searchResults = await searchVideos(args.join(" "));
@@ -23,21 +19,23 @@ const handler = async (m, { conn, args, usedPrefix }) => {
     const thumbnail = await (await fetch(video.thumbnail)).buffer();
 
     const messageText = formatMessageText(video);
-
-    // Elegir 3 sugerencias aleatorias del resto de resultados
     const randomSuggestions = shuffleArray(searchResults.slice(1)).slice(0, 3);
-    const sugerencias = randomSuggestions.map((v, i) => `   ${i + 1}. ✰ ${v.title}`).join('\n');
+    const sugerencias = formatSuggestions(randomSuggestions);
 
-    const fullMessage = `╭─〘 𝙍𝙀𝙎𝙐𝙇𝙏𝘼𝘿𝙊 𝙀𝙉𝘾𝙊𝙉𝙏𝙍𝘼𝘿𝙊 〙─╮\n${messageText}\n╰────────────────────╯\n\n` +
-                        `╭───⊷ *🔎 Sugerencias Relacionadas:*\n${sugerencias}\n╰──────────────╯`;
+    const fullMessage = 
+`${messageText}
+
+╭─────〔 *🔎 SUGERENCIAS RELACIONADAS* 〕─────╮
+${sugerencias}
+╰────────────────────────────────────────────╯`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
       caption: fullMessage,
-      footer: `Edited By Wirk`,
+      footer: `✨ Generado por Shadow Ultra`,
       contextInfo: {
         mentionedJid: [m.sender],
-        forwardingScore: 999,
+        forwardingScore: 1000,
         isForwarded: true
       },
       buttons: generateButtons(video, usedPrefix),
@@ -50,7 +48,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
   } catch (e) {
     console.error(e);
     await m.react('❌');
-    conn.reply(m.chat, '*❗ Ocurrió un error al buscar el video.*', m);
+    conn.reply(m.chat, '*❗ Ocurrió un error al buscar el video. Inténtalo de nuevo.*', m);
   }
 };
 
@@ -70,7 +68,7 @@ async function searchVideos(query) {
       thumbnail: video.thumbnail,
       channel: video.author.name,
       published: video.timestamp || 'No disponible',
-      views: video.views || 'No disponible',
+      views: video.views?.toLocaleString() || 'No disponible',
       duration: video.duration.timestamp || 'No disponible'
     }));
   } catch (error) {
@@ -79,27 +77,47 @@ async function searchVideos(query) {
   }
 }
 
-// Formateo visual
+// Formato visual del resultado principal
 function formatMessageText(video) {
-  return `\n*╭📺 Título:* 『 ${video.title} 』\n` +
-         `*├⏱ Duración:* ${video.duration || 'No disponible'}\n` +
-         `*├👤 Canal:* ${video.channel || 'Desconocido'}\n` +
-         `*├🕒 Publicado:* ${convertTimeToSpanish(video.published)}\n` +
-         `*├👁 Vistas:* ${video.views || 'No disponible'}\n` +
-         `*╰🌐 Enlace:* ${video.url}`;
+  return (
+`╭────────────〔 *🎥 VIDEO ENCONTRADO* 〕────────────╮
+│
+│ *📌 Título:* 
+│ ${video.title}
+│
+│ *⏳ Duración:* ${video.duration}
+│ *👤 Canal:* ${video.channel}
+│ *🗓 Publicado:* ${convertTimeToSpanish(video.published)}
+│ *👁 Vistas:* ${video.views}
+│ *🔗 Enlace:* ${video.url}
+│
+╰────────────────────────────────────────────╯`
+  );
 }
 
-// Botones decorativos
+// Formato de sugerencias ordenado
+function formatSuggestions(suggestions) {
+  return suggestions.map((v, i) => 
+    `│ ${i + 1}. ${truncateTitle(v.title)}\n│    🔗 ${v.url}`
+  ).join('\n');
+}
+
+// Recorta títulos largos
+function truncateTitle(title, maxLength = 50) {
+  return title.length > maxLength ? title.slice(0, maxLength - 3) + '...' : title;
+}
+
+// Botones visuales
 function generateButtons(video, usedPrefix) {
   return [
     {
       buttonId: `${usedPrefix}ytmp3 ${video.url}`,
-      buttonText: { displayText: '🎧 Descargar MP3' },
+      buttonText: { displayText: '🎧 MP3 (Audio)' },
       type: 1
     },
     {
       buttonId: `${usedPrefix}ytmp4 ${video.url}`,
-      buttonText: { displayText: '🎬 Descargar MP4' },
+      buttonText: { displayText: '🎬 MP4 (Video)' },
       type: 1
     }
   ];
@@ -108,16 +126,16 @@ function generateButtons(video, usedPrefix) {
 // Traducir fechas
 function convertTimeToSpanish(timeText) {
   return timeText
+    .replace(/years?/, 'años')
+    .replace(/months?/, 'meses')
+    .replace(/days?/, 'días')
+    .replace(/hours?/, 'horas')
+    .replace(/minutes?/, 'minutos')
     .replace(/year/, 'año')
-    .replace(/years/, 'años')
     .replace(/month/, 'mes')
-    .replace(/months/, 'meses')
     .replace(/day/, 'día')
-    .replace(/days/, 'días')
     .replace(/hour/, 'hora')
-    .replace(/hours/, 'horas')
-    .replace(/minute/, 'minuto')
-    .replace(/minutes/, 'minutos');
+    .replace(/minute/, 'minuto');
 }
 
 // Array aleatorio
