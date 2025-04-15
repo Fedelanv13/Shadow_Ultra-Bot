@@ -10,7 +10,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
   await m.react('🔍');
 
   await conn.sendMessage(m.chat, {
-    text: '⏳ *Buscando el mejor resultado para ti...*',
+    text: '⏳',
     tts: true
   }, { quoted: m });
 
@@ -34,7 +34,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
     await conn.sendMessage(m.chat, {
       image: thumbnail,
       caption: fullMessage,
-      footer: `🧠 Bot editado por Wirk | Mejora continua...`,
+      footer: `Edited By Wirk`,
       contextInfo: {
         mentionedJid: [m.sender],
         forwardingScore: 999,
