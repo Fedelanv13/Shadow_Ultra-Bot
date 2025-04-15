@@ -4,11 +4,24 @@ import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysoc
 
 const handler = async (m, { conn, args, usedPrefix }) => {
   if (!args[0]) {
-    return conn.reply(m.chat, '✏️ *Ingresa un título para buscar en YouTube.*\n\n*Ejemplo:* \n> *Corazón Serrano - Mix Poco Yo*', m);
+    return conn.reply(m.chat, `✏️ Ingresa un título para buscar en YouTube.
+
+Ejemplo:
+> ${usedPrefix}play Corazón Serrano - Mix Poco Yo`, m);
   }
 
   await m.react('🔍');
-  await conn.sendMessage(m.chat, { text: '⏳ Buscando el mejor resultado para ti...', tts: false }, { quoted: m });
+
+  await conn.sendMessage(m.chat, { 
+    text: `⏳ Buscando...
+
+Estoy buscando el mejor resultado para:
+\`\`\`
+${args.join(" ")}
+\`\`\`
+Por favor espera un momento...`, 
+    tts: false 
+  }, { quoted: m });
 
   try {
     const searchResults = await searchVideos(args.join(" "));
@@ -25,14 +38,15 @@ const handler = async (m, { conn, args, usedPrefix }) => {
     const fullMessage = 
 `${messageText}
 
-╭─────〔 *🔎 SUGERENCIAS RELACIONADAS* 〕─────╮
-${sugerencias}
-╰────────────────────────────────────────────╯`;
+\`\`\`
+🔎 Sugerencias relacionadas:
+\`\`\`
+${sugerencias}`;
 
     await conn.sendMessage(m.chat, {
       image: thumbnail,
       caption: fullMessage,
-      footer: `✨ Generado por Shadow Ultra`,
+      footer: `💎 Shadow Ultra Edited 🐻‍❄️ By Wirk 🥮`,
       contextInfo: {
         mentionedJid: [m.sender],
         forwardingScore: 1000,
@@ -48,7 +62,7 @@ ${sugerencias}
   } catch (e) {
     console.error(e);
     await m.react('❌');
-    conn.reply(m.chat, '*❗ Ocurrió un error al buscar el video. Inténtalo de nuevo.*', m);
+    conn.reply(m.chat, '❗ Ocurrió un error al buscar el video. Inténtalo de nuevo más tarde.', m);
   }
 };
 
@@ -80,25 +94,23 @@ async function searchVideos(query) {
 // Formato visual del resultado principal
 function formatMessageText(video) {
   return (
-`╭────────────〔 *🎥 VIDEO ENCONTRADO* 〕────────────╮
-│
-│ *📌 Título:* 
-│ ${video.title}
-│
-│ *⏳ Duración:* ${video.duration}
-│ *👤 Canal:* ${video.channel}
-│ *🗓 Publicado:* ${convertTimeToSpanish(video.published)}
-│ *👁 Vistas:* ${video.views}
-│ *🔗 Enlace:* ${video.url}
-│
-╰────────────────────────────────────────────╯`
+`\`\`\`
+🎥 Video encontrado
+
+📌 Título: ${video.title}
+⏳ Duración: ${video.duration}
+👤 Canal: ${video.channel}
+🗓 Publicado: ${convertTimeToSpanish(video.published)}
+👁 Vistas: ${video.views}
+🔗 Enlace: ${video.url}
+\`\`\``
   );
 }
 
 // Formato de sugerencias ordenado
 function formatSuggestions(suggestions) {
   return suggestions.map((v, i) => 
-    `│ ${i + 1}. ${truncateTitle(v.title)}\n│    🔗 ${v.url}`
+    `\`\`\`\n${i + 1}. ${truncateTitle(v.title)}\n   ${v.url}\n\`\`\``
   ).join('\n');
 }
 
