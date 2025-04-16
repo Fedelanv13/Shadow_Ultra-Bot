@@ -49,6 +49,18 @@ let handler = async (m, { conn, text }) => {
       mimetype: "audio/mpeg",
       ptt: false,
       fileName: `${video.title}.mp3`,
+      contextInfo: {
+          externalAdReply: {
+            title: title,
+            body: "🤍 𝙎𝙝𝙖𝙙𝙤𝙬 𝙐𝙡𝙩𝙧𝙖 𝙀𝙙𝙞𝙩𝙚𝙙  🐻‍❄️",
+            mediaType: 1,
+            previewType: "PHOTO",
+            thumbnailUrl: thumbnail,
+            showAdAttribution: true,
+            renderLargerThumbnail: true
+          }
+        }
+      }, { quoted: m });
     };
 
     // Enviar el audio
@@ -66,7 +78,7 @@ let handler = async (m, { conn, text }) => {
 };
 
 handler.customPrefix = /m|@|./i;
-handler.command = ['musica' 'usic'];
+handler.command = ['musica', 'usic'];
 handler.help = ['play'];
 handler.tags = ['play'];
 
