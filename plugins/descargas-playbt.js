@@ -1,6 +1,6 @@
 import yts from 'yt-search';
 import fetch from 'node-fetch';
-import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysockets/baileys';
+import { generateWAMessageFromContent } from '@whiskeysockets/baileys';
 
 const handler = async (m, { conn, args, usedPrefix }) => {
   if (!args[0]) {
@@ -14,9 +14,7 @@ Ejemplo:
 
   await conn.sendMessage(m.chat, { 
     text: `⏳ *Buscando...*
-\`\`\`
-${args.join(" ")}
-\`\`\`
+🔎 ${args.join(" ")}
 _Por favor espera un momento..._`, 
     tts: false 
   }, { quoted: m });
@@ -36,9 +34,7 @@ _Por favor espera un momento..._`,
     const fullMessage = 
 `${messageText}
 
-\`\`\`
-🔎 Sugerencias relacionadas:
-\`\`\`
+🔎 *Sugerencias relacionadas:*
 ${sugerencias}`;
 
     await conn.sendMessage(m.chat, {
@@ -92,23 +88,21 @@ async function searchVideos(query) {
 // Formato visual del resultado principal
 function formatMessageText(video) {
   return (
-`\`\`\`
-🎥 Video encontrado
+    `🎥 *Video encontrado*
 
 📌 Título: ${video.title}
 ⏳ Duración: ${video.duration}
 👤 Canal: ${video.channel}
 🗓 Publicado: ${convertTimeToSpanish(video.published)}
 👁 Vistas: ${video.views}
-🔗 Enlace: ${video.url}
-\`\`\``
+🔗 Enlace: ${video.url}`
   );
 }
 
 // Formato de sugerencias ordenado
 function formatSuggestions(suggestions) {
   return suggestions.map((v, i) => 
-    `\`\`\`\n${i + 1}. ${truncateTitle(v.title)}\n   ${v.url}\n\`\`\``
+    `🔸 ${i + 1}. ${truncateTitle(v.title)}\n🔗 ${v.url}`
   ).join('\n');
 }
 
