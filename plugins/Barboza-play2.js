@@ -50,27 +50,20 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
     if (!text.trim()) return conn.reply(m.chat, `✏️ *Ingresa el nombre de la música o link de YouTube.*`, m);
 
+    m.react('🔍');
     const search = await yts(text);
     if (!search.all || search.all.length === 0) return m.reply('🔍 *No se encontraron resultados.*');
 
     const videoInfo = search.all[0];
-    const { title, thumbnail, timestamp, views, ago, url } = videoInfo;
-    const thumb = (await conn.getFile(thumbnail))?.data;
+    const { title, thumbnail, timestamp, url } = videoInfo;
 
-    // Reacción de búsqueda
-    m.react('🔍');
+    // Enviar mensaje de espera con miniatura
+    await conn.sendMessage(m.chat, {
+      image: { url: thumbnail },
+      caption: `⏳ *Procesando video...*\n\n*🎞️ Título:* ${title}\n*⏱️ Duración:* ${timestamp}\n🔗 ${url}`
+    }, { quoted: m });
 
-    if (command === 'play' || command === 'yta' || command === 'mp3') {
-      const api = await ddownr.download(url, 'mp3');
-      // Reacción de descarga
-      m.react('📥');
-      await conn.sendMessage(m.chat, {
-        audio: { url: api.downloadUrl },
-        mimetype: "audio/mpeg"
-      }, { quoted: m });
-    }
-
-    else if (command === 'play2' || command === 'ytv' || command === 'mp4') {
+    if (command === 'play2' || command === 'ytv' || command === 'mp4') {
       let sources = [
         `https://api.siputzx.my.id/api/d/ytmp4?url=${url}`,
         `https://api.zenkey.my.id/api/download/ytmp4?apikey=zenkey&url=${url}`,
@@ -87,13 +80,12 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
           if (downloadUrl) {
             success = true;
-            // Reacción de video listo
             m.react('✅');
             await conn.sendMessage(m.chat, {
               video: { url: downloadUrl },
               mimetype: 'video/mp4',
               fileName: `${title}.mp4`,
-              thumbnail: thumb,
+              thumbnail: await (await conn.getFile(thumbnail))?.data,
               caption: `*🎞️ Título:* ${title}\n*🎥 Calidad:* ${json?.data?.quality || json?.result?.quality || 'Desconocida'}\n*📂 Formato:* MP4\n*⏱️ Duración:* ${timestamp || 'Desconocida'}`
             }, { quoted: m });
             break;
@@ -106,8 +98,6 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
       if (!success) {
         return m.reply(`❌ *No se pudo descargar el video.*`);
       }
-    } else {
-      throw "Comando no reconocido.";
     }
 
   } catch (error) {
@@ -115,12 +105,8 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   }
 };
 
-handler.command = handler.help = ['play22'];
+handler.command = ['play2'];
+handler.help = ['play2'];
 handler.tags = ['downloader'];
 
 export default handler;
-
-function formatViews(views) {
-  if (views >= 1000) return (views / 1000).toFixed(1) + 'k (' + views.toLocaleString() + ')';
-  else return views.toString();
-  }
