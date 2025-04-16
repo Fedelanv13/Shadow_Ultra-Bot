@@ -50,17 +50,16 @@ let handler = async (m, { conn, text }) => {
       ptt: false,
       fileName: `${video.title}.mp3`,
       contextInfo: {
-          externalAdReply: {
-            title: title,
-            body: "🤍 𝙎𝙝𝙖𝙙𝙤𝙬 𝙐𝙡𝙩𝙧𝙖 𝙀𝙙𝙞𝙩𝙚𝙙  🐻‍❄️",
-            mediaType: 1,
-            previewType: "PHOTO",
-            thumbnailUrl: thumbnail,
-            showAdAttribution: true,
-            renderLargerThumbnail: true
-          }
+        externalAdReply: {
+          title: video.title,
+          body: "🤍 𝙎𝙝𝙖𝙙𝙤𝙬 𝙐𝙡𝙩𝙧𝙖 𝙀𝙙𝙞𝙩𝙚𝙙  🐻‍❄️",
+          mediaType: 1,
+          previewType: "PHOTO",
+          thumbnailUrl: video.thumbnail,
+          showAdAttribution: true,
+          renderLargerThumbnail: true
         }
-      }, { quoted: m });
+      }
     };
 
     // Enviar el audio
