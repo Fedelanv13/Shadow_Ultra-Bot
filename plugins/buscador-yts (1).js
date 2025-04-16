@@ -8,7 +8,7 @@ import Jimp from "jimp";
 let handler = async (m, { conn, text, usedPrefix, command }) => {
     if (!text) return m.reply(`*🔎 ¿Que deseas buscar en YouTube?*`);
 
-  await m.react('🕓')
+  await m.react('⏱️')
 
     async function createImage(img) {
         const { imageMessage } = await generateWAMessageContent({
