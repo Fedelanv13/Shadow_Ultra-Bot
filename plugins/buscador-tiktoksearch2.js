@@ -11,7 +11,7 @@ let handler = async (m, { conn, text }) => {
 
     try {
         await m.react('🕓');
-        conn.reply(m.chat, '*Descargando su video...*', m);
+        conn.reply(m.chat, '*Buscando en tiktok 👻*', m);
 
         let apiUrl = `https://delirius-apiofc.vercel.app/search/tiktoksearch?query=${encodeURIComponent(text)}`;
         let { data: response } = await axios.get(apiUrl);
