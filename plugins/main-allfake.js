@@ -32,10 +32,10 @@ let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? c
 //let pp = await conn.profilePictureUrl(who, 'image').catch(_ => 'https://telegra.ph/file/327f6ad853cb4f405aa80.jpg')
 
 //CREADOR Y OTROS
-global.creador = 'Wa.me/51927238856'
+global.creador = 'Wa.me/5491156178758'
 global.botreal = `${(conn.user.jid == global.conn.user.jid ? 'Oficial' : 'Sub-Bot')}`
 global.ofcbot = `${conn.user.jid.split('@')[0]}`
-global.asistencia = 'Wa.me/51927238856'
+global.asistencia = 'Wa.me/5491156178758'
 global.namech = '𝑺𝒉𝒂𝒅𝒐𝒘 𝑩𝒐𝒕 - 𝑴𝑫'
 global.namechannel2 = 'ꨴ ☁꣺ꤪ꤬꤯ꨬꨶ ̷̸̲̼̈́ Mᴏᴏɴ Fᴏʀᴄᴇ Ƭᴇᴀᴍ 彡'
 global.namegrupo = 'Group Shadow Oficial'
@@ -59,9 +59,9 @@ global.emojis = [emoji, emoji2, emoji3, emoji4, emoji5].getRandom()
 global.wait = '*[ ⏳ ] Aguarde un momento...*';
 
 //ENLACES
-var grupo = 'https://chat.whatsapp.com/FCS6htvAmlT7nq006lxU4I'  
+var grupo = 'https://chat.whatsapp.com/GYTJqKhf6z1HBsyyidsBUs'  
 var github = 'https://github.com/CrxstianEscobar/ShadowBot-MD' 
-var web = 'https://chat.whatsapp.com/If3WAOMJqZp2WLqDp9n4Cw' 
+var web = 'https://chat.whatsapp.com/L6Aiv7yk9YNEcmgGn4Sw7u' 
 let instagram = 'https://www.instagram.com/shadowbot.md'
 
 global.redes = [grupo, github, web, instagram].getRandom()
@@ -128,17 +128,17 @@ global.readMore = more.repeat(850)
 
 global.authsticker = `\n\n🍪 mᥲძᥱ ᑲᥡ:\n↳協 ֪ Տһᥲ͡ძ͜᥆፝֟ա  ⚡︎  Uᥣ𝗍rᥲ ׄ🍒˚ .\n\n👤 rᥱ𝗊ᥙіrᥱძ ᑲᥡ\n↳@${conn.getName(m.sender)}`;
 
-global.packsticker = `ꨴ ☁꣺ꤪ꤬꤯ꨬꨶ ̷̸̲̼̈́ Mᴏᴏɴ Fᴏʀᴄᴇ Ƭᴇᴀᴍ 彡\n↳@moonforce_team\n\n☘️ іᥒ𝖿᥆rmᥲ𝗍і᥆ᥒ\n↳Wa.me/51927238856`
+global.packsticker = `ꨴ ☁꣺ꤪ꤬꤯ꨬꨶ ̷̸̲̼̈́ Mᴏᴏɴ Fᴏʀᴄᴇ Ƭᴇᴀᴍ 彡\n↳@moonforce_team\n\n☘️ іᥒ𝖿᥆rmᥲ𝗍і᥆ᥒ\n↳Wa.me/5491156178758`
 
 //FAKES
 global.fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
 
-global.fake = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: '120363318267632676@newsletter', newsletterName: "˚₊·͟͟͟͟͟͟͞͞͞͞͞͞𝑴𝒐𝒐𝒏 𝑭𝒐𝒓𝒄𝒆 - 𝑻𝒆𝒂𝒎 ೃ࿔₊•", serverMessageId: -1 }
+global.fake = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: '120363400708262483@newsletter', newsletterName: "˚₊·͟͟͟͟͟͟͞͞͞͞͞͞𝑴𝒐𝒐𝒏 𝑭𝒐𝒓𝒄𝒆 - 𝑻𝒆𝒂𝒎 ೃ࿔₊•", serverMessageId: -1 }
 }}, { quoted: m }
 
 //ID CANALES
-global.idchannel = '120363419146589983@newsletter'
-global.canalIdM = ["120363402846939411@newsletter", "120363357231409846@newsletter", "120363419146589983@newsletter"]
+global.idchannel = '120363400708262483@newsletter'
+global.canalIdM = ["120363400708262483@newsletter", "120363400708262483@newsletter", "120363400708262483@newsletter"]
 global.canalNombreM = ["Betty's World 🌻", "Abundantes Botsitos👻", "Betty's World 🌻"]
 global.channelRD = await getRandomChannel()
 // global.estilo = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(false ? { remoteJid: "3876577197-120363302285079181@g.us" } : {}) }, message: { orderMessage: { itemCount : -999999, status: 1, surface : 1, message: `${packname}`, orderTitle: 'Bang', thumbnail: icons, sellerJid: '0@s.whatsapp.net'}}}
