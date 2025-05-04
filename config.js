@@ -8,13 +8,13 @@ import axios from 'axios'
 import moment from 'moment-timezone' 
 
 global.owner = [
-   ['5491156178758', '𝖿ᥱძᥱᥣᥲᥒᥡ𝗍 ‍', true],
-   ['50493732693', 'Wirk', true],
-   ['573133374132', 'YoSoyYo', true]
+   ['5491156178758', '𝘧𝘦𝘥𝘦𝘭𝘢𝘯𝘠𝘛 ‍', true],
+   ['13124976342', 'Josue', true],
+   ['5491126852241', 'fede', true]
 ]
 
 global.creadorbot = [
-   ['5491156178758', '𝖿ᥱძᥱᥣᥲᥒᥡ𝗍 ‍', true]
+   ['5491156178758', '𝘧𝘦𝘥𝘦𝘭𝘢𝘯𝘠𝘛 ‍', true]
 ]
 
 global.mods = ['51990841568', '51965911060']
@@ -22,10 +22,10 @@ global.prems = ['51965911060']
 
 
 global.packname = 'ShadowUtra'
-global.botname = '(✦◠‿◠)ShadowBot-MD'
+global.botname = '(✦◠‿◠)ShadowBot-Bot'
 global.wm = '⏤͟͟͞͞⋆⬪࣪ꥈ☕★ ׄ ꒱ Shadow ୭'
-global.author = 'Edited By 𝖿ᥱძᥱᥣᥲᥒᥡ𝗍 ‍'
-global.dev = '© Powered by Nova Spark Community'
+global.author = 'Edited By 𝘧𝘦𝘥𝘦𝘭𝘢𝘯𝘠𝘛'
+global.dev = '© Powered by 𝘧𝘦𝘥𝘦𝘭𝘢𝘯𝘠𝘛'
 global.errorm = 'Error: ${error.message}'
 global.nombrebot = 'Shadow Bot - MD'
 global.textbot = `「 SHADOW_ULTRA-BOT 」`
