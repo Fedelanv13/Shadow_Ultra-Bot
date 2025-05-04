@@ -3,23 +3,23 @@ const handler = async (m, { conn }) => {
 ╭─〔 *🌐 GRUPOS OFICIALES* 〕─╮
 
 📌 *Grupo Principal:*
-https://chat.whatsapp.com/FCS6htvAmlT7nq006lxU4I
+https://chat.whatsapp.com/GYTJqKhf6z1HBsyyidsBUs
 
 📌 *Grupo Secundario:*
-https://chat.whatsapp.com/If3WAOMJqZp2WLqDp9n4Cw
+https://chat.whatsapp.com/L6Aiv7yk9YNEcmgGn4Sw7u
 
 ╰───────────────────────╯
 
 ╭─〔 *📣 CANALES * 〕─╮
 
-✨ https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f  
-✨ https://whatsapp.com/channel/0029VauTE8AHltY1muYir31n
+✨ https://whatsapp.com/channel/0029Vb5oaHFCBtxIGWefdp0n  
+✨ https://whatsapp.com/channel/0029Vb5oaHFCBtxIGWefdp0n
 
 ╰──────────────────────────╯
 
 ╭─〔 *🤝 CANAL AMIGO* 〕─╮
 
-❤️ https://whatsapp.com/channel/0029Vb5UmxhFi8xetiTDal0f
+❤️ https://whatsapp.com/channel/0029Vb5oaHFCBtxIGWefdp0n
 
 ╰──────────────────────╯
 `.trim();
