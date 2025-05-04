@@ -66,18 +66,8 @@
 
 ## 👨‍💻 **Creador** 👨‍💻
 
-<a href="https://github.com/CrxstianEscobar">
+<a href="https://github.com/Fedelanv13">
   <img src="https://files.catbox.moe/0110im.png" width="100px" />
 </a>
 
 **Crixs**
-
----
-
-## ✨ **Editado por** ✨
-
-<a href="https://github.com/Ado926">
-  <img src="https://avatars.githubusercontent.com/u/47483756?v=4" width="100px" />
-</a>
-
-**Wirk**
