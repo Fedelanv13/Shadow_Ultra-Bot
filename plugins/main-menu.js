@@ -25,8 +25,9 @@ let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, com
         const fotoUrl = 'https://files.catbox.moe/8yj930.jpg' // URL fija del foto
 
         let menu = `
-ㅤ🍃⩁ ꯭ ͡ ᩚ꯭ ⩁ 🍃
-───┊ꦿ🎄⿻ 𝖲𝗁ᥲძ᥆𝗐 𝖴ᥣ𝗍𝗋ᥲ 𝐁𝐨𝐭 ❜ೃ───
+╭── `INFO-BOT` ──────                                                 
+│┊ꦿ🎄⿻ 𝖲𝗁ᥲძ᥆𝗐 𝖴ᥣ𝗍𝗋ᥲ 𝐁𝐨𝐭 ❜ೃ  
+╰──────────────╯
 
 👤 ¡Hᴏʟᴀ, ${taguser}! 
 💬 ${saludo}
