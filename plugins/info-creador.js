@@ -10,9 +10,9 @@ let handler = async (m, { conn, usedPrefix, text, args, command }) => {
 
     // VCARD
     let list = [{
-        displayName: "Ado",
+        displayName: "fedelanYT",
         vcard: `BEGIN:VCARD\nVERSION:3.0\nFN: Wirk
-\nitem1.TEL;waid=50493732693:50493732693\nitem1.X-ABLabel:Número\nitem2.EMAIL;type=INTERNET: juanpalvarez012@gmail.com\nitem2.X-ABLabel:Email\nitem3.URL:https://www.instagram.com/shadowbot.md\nitem3.X-ABLabel:Internet\nitem4.ADR:;; Perú;;;;\nitem4.X-ABLabel:Region\nEND:VCARD`,
+\nitem1.TEL;waid=5491156178758:5491156178758\nitem1.X-ABLabel:Número\nitem2.EMAIL;type=INTERNET: juanpalvarez012@gmail.com\nitem2.X-ABLabel:Email\nitem3.URL:https://www.instagram.com/shadowbot.md\nitem3.X-ABLabel:Internet\nitem4.ADR:;; Argentina;;;;\nitem4.X-ABLabel:Region\nEND:VCARD`,
     }];
 
     await conn.sendMessage(m.chat, {
@@ -26,7 +26,7 @@ let handler = async (m, { conn, usedPrefix, text, args, command }) => {
                 title: 'һ᥆ᥣᥲ :D,
                 body: dev,
                 thumbnailUrl: 'https://files.catbox.moe/8an9fs.jpg',
-                sourceUrl: 'https://wa.me/50493732693?text=Vengo+Del+Comando+.owner',
+                sourceUrl: 'https://wa.me/5491156178758?text=Vengo+Del+Comando+.owner',
                 mediaType: 1,
                 renderLargerThumbnail: true
             }
