@@ -27,8 +27,8 @@ global.wm = '⏤͟͟͞͞⋆⬪࣪ꥈ☕★ ׄ ꒱ Shadow ୭'
 global.author = 'Edited By 𝘧𝘦𝘥𝘦𝘭𝘢𝘯𝘠𝘛'
 global.dev = '© Powered by 𝘧𝘦𝘥𝘦𝘭𝘢𝘯𝘠𝘛'
 global.errorm = 'Error: ${error.message}'
-global.nombrebot = 'Shadow Bot - MD'
-global.textbot = `「 SHADOW_ULTRA-BOT 」`
+global.nombrebot = '💙𝖲𝗁ᥲძ᥆𝗐 𝖴ᥣ𝗍𝗋ᥲ 𝐁𝐨𝐭💙'
+global.textbot = `┊ꦿ🎄⿻ 𝖲𝗁ᥲძ᥆𝗐 𝖴ᥣ𝗍𝗋ᥲ 𝐁𝐨𝐭 ❜ೃ`
 global.vs = '3.0.0'
 
 
