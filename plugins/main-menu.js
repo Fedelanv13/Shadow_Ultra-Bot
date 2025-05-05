@@ -22,7 +22,7 @@ let handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, com
         let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
         let perfil = await conn.profilePictureUrl(who, 'image').catch(_ => 'https://files.catbox.moe/pk3xxk.jpg')
 
-        const fotoUrl = 'https://files.catbox.moe/nn7i08.jpg' // URL fija del foto
+        const fotoUrl = 'https://files.catbox.moe/ngv37g.jpg' // URL fija del foto
 
         let menu = `
 ㅤ🍃⩁ ꯭ ͡ ᩚ꯭ ⩁ 🍃
